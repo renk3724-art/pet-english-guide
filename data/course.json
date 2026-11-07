@@ -1,0 +1,79 @@
+{
+  "title": "B1 Preliminary 自学站",
+  "checkedOn": "2026-11-07",
+  "storageNote": "学习进度和练习成绩只保存在这台设备的这个浏览器里，不会同步到其他浏览器、手机或账号。",
+  "lessons": [
+    {
+      "id": "overview",
+      "file": "tutorial/01-overview.md",
+      "title": "考试概览",
+      "summary": "搞清四份试卷、时间、分数，以及标准版和 for Schools 的差别。",
+      "minutes": 25,
+      "quizId": "overview"
+    },
+    {
+      "id": "reading",
+      "file": "tutorial/02-reading.md",
+      "title": "阅读",
+      "summary": "六个部分怎么读、怎么排除干扰项，并看一道完整的自编例题。",
+      "minutes": 35,
+      "quizId": "reading"
+    },
+    {
+      "id": "writing",
+      "file": "tutorial/03-writing.md",
+      "title": "写作",
+      "summary": "邮件四要点、文章和故事，以及四项评分标准。",
+      "minutes": 35,
+      "quizId": "writing"
+    },
+    {
+      "id": "listening",
+      "file": "tutorial/04-listening.md",
+      "title": "听力",
+      "summary": "四段录音各听什么；本站语音合成和官方录音分别怎么用。",
+      "minutes": 30,
+      "quizId": "listening"
+    },
+    {
+      "id": "speaking",
+      "file": "tutorial/05-speaking.md",
+      "title": "口语",
+      "summary": "双人考试四部分、可用的功能句，以及一张一分钟描述提纲。",
+      "minutes": 30,
+      "quizId": "speaking"
+    },
+    {
+      "id": "grammar",
+      "file": "tutorial/06-grammar-vocabulary.md",
+      "title": "语法与词汇",
+      "summary": "从 A2 走到 B1 时最容易丢分的结构和话题词汇方法。",
+      "minutes": 40,
+      "quizId": "grammar"
+    },
+    {
+      "id": "plan",
+      "file": "tutorial/07-study-plan.md",
+      "title": "八周示例计划",
+      "summary": "一份可改的每周安排。它是示例，不是剑桥课表。",
+      "minutes": 20,
+      "quizId": "plan"
+    },
+    {
+      "id": "practice",
+      "file": "tutorial/08-practice-intro.md",
+      "title": "综合自测",
+      "summary": "用前面各课没有重复过的小题做一次混合检查。",
+      "minutes": 25,
+      "quizId": "checkpoint"
+    },
+    {
+      "id": "resources",
+      "file": "tutorial/10-resources.md",
+      "title": "官方资源与核对说明",
+      "summary": "样卷、词汇表、成绩和日期页面，以及本教程的核对限度。",
+      "minutes": 15,
+      "quizId": null
+    }
+  ]
+}
