@@ -4,24 +4,31 @@ import {
   addAttempt,
   blankQuestionIds,
   buildExport,
+  countWords,
   emptyProgress,
   flattenQuestions,
   lessonStatus,
   markLessonComplete,
   quizSections,
+  rememberStop,
   resetConfirmed,
+  saveDraft,
   scoreQuiz,
   touchLesson,
   validateImport,
   wrongItems,
 } from "./logic.mjs";
 import { escapeHtml, renderMarkdown } from "./markdown.mjs";
+import { starterCourse } from "./starter-course.mjs";
+import { dueCards, gradeActivity, isLessonUnlocked, normaliseAnswer, scheduleCard } from "./starter.mjs";
+import { activityHtml, feedbackHtml, reviewHtml, starterPathHtml, summaryHtml, teachHtml } from "./starter-ui.mjs";
 
 const OFFICIAL_LISTENING = "https://www.cambridgeenglish.org/exams-and-tests/qualifications/preliminary/preparation/";
 
 const state = {
   course: null,
   quizzes: new Map(),
+  tasks: new Map(),
   progress: emptyProgress(),
   storageBlocked: false,
   loadError: "",
@@ -30,7 +37,10 @@ const state = {
 };
 
 let quizSession = null;
+let taskSession = null;
 let timerId = null;
+let starterRun = null;
+let recordStream = null;
 
 const main = document.querySelector("#main");
 
@@ -43,7 +53,11 @@ function lessonIds() {
 }
 
 function quizIds() {
-  return [...state.quizzes.keys()];
+  return [...state.quizzes.keys(), ...state.tasks.keys()];
+}
+
+function taskIds() {
+  return [...state.tasks.keys()];
 }
 
 function findLesson(id) {
@@ -54,9 +68,26 @@ function findQuiz(id) {
   return state.quizzes.get(id) || null;
 }
 
+function findTask(id) {
+  return state.tasks.get(id) || null;
+}
+
+function validateStored(raw) {
+  return validateImport(raw, lessonIds(), quizIds(), taskIds());
+}
+
 function save() {
   if (state.storageBlocked) return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(buildExport(state.progress)));
+}
+
+function resumeHref() {
+  const stop = state.progress.lastStop;
+  if (stop?.kind === "task" && state.tasks.has(stop.id)) return `#/task/${stop.id}`;
+  if (stop?.kind === "quiz" && state.quizzes.has(stop.id)) return `#/quiz/${stop.id}`;
+  if (stop?.kind === "lesson" && findLesson(stop.id)) return `#/lesson/${stop.id}`;
+  if (findLesson(state.progress.lastLessonId)) return `#/lesson/${state.progress.lastLessonId}`;
+  return "#/quiz/reading";
 }
 
 function resolveLink(url) {
@@ -72,6 +103,11 @@ function parseRoute() {
   if (parts.length === 0) return { name: "home" };
   if (parts[0] === "lesson" && parts[1]) return { name: "lesson", id: parts[1] };
   if (parts[0] === "quiz" && parts[1]) return { name: "quiz", id: parts[1] };
+  if (parts[0] === "task" && parts[1]) return { name: "task", id: parts[1] };
+  if (parts[0] === "practice") return { name: "practice" };
+  if (parts[0] === "starter" && parts[1]) return { name: "starter-lesson", id: parts[1] };
+  if (parts[0] === "starter-review") return { name: "starter-review" };
+  if (parts[0] === "starter") return { name: "starter" };
   if (parts[0] === "review" && parts[1]) return { name: "attempt", id: parts[1] };
   if (parts[0] === "review") return { name: "review" };
   if (parts[0] === "wrong") return { name: "wrong" };
@@ -111,47 +147,153 @@ async function loadLesson(lesson) {
 }
 
 function viewHome() {
-  const done = state.progress.completedLessonIds.length;
-  const total = state.course.lessons.length;
-  const last = findLesson(state.progress.lastLessonId);
-  const resume = last
-    ? `<a class="button" href="#/lesson/${last.id}">继续上次的课：${escapeHtml(last.title)}</a>`
-    : `<a class="button" href="#/lesson/overview">从考试概览开始</a>`;
+  const starter = state.progress.starter || { completedIds: [], vocab: {} };
+  const done = starter.completedIds?.length || 0;
+  const total = starterCourse.lessons.length;
+  const resumeId = starter.cursor?.lessonId || starterCourse.lessons.find((lesson) => !(starter.completedIds || []).includes(lesson.id))?.id || "s01";
+  return `<section class="hero practice-hero">
+    <div>
+      <p class="kicker">中文讲解 · 不假设你学过英语</p>
+      <h1>从零开始学英语</h1>
+      <p class="lead">先学几个字母和日常说法，马上做题。已完成 ${done} / ${total} 课。后面还有进阶的 B1 Preliminary，但零基础先从这里开始。</p>
+      <div class="actions entry-actions">
+        <a class="button large" href="#/starter">从零开始</a>
+        <a class="button large secondary" href="#/starter/${resumeId}">继续学习</a>
+      </div>
+    </div>
+  </section>
+  ${state.loadError ? `<aside class="banner warn"><strong>本地进度无法读取。</strong> ${escapeHtml(state.loadError)} 旧的 PET 进度还留在浏览器里。</aside>` : ""}
+  <p><a class="button-secondary" href="#/starter-review">复习到期的词</a></p>
+  <details class="more-lessons">
+    <summary>进阶：B1 Preliminary 考试练习</summary>
+    <p>适合已经能读简单英文的人。下面这些题不是零基础课。</p>
+    <div class="practice-grid">${practiceSkills().map((skill) => `<a class="practice-card" href="${skill.href}"><strong>${escapeHtml(skill.title)}</strong><span>${escapeHtml(skill.blurb)}</span></a>`).join("")}</div>
+    ${lessonList()}
+  </details>`;
+}
+
+function practiceSkills() {
+  return [
+    { title: "阅读练习", href: "#/quiz/reading", blurb: "先看通知例题，再做 5 则短文、8 门课程配对和两篇短文。" },
+    { title: "写作练习", href: "#/task/writing-email", blurb: "写一封约 100 词的邮件：有字数、自动保存的草稿，交卷后才看范文。" },
+    { title: "听力练习", href: "#/quiz/listening", blurb: "先播放自编稿再答题。不能播放时改看文字稿，那次不记听力分。" },
+    { title: "口语练习", href: "#/task/speaking-photo", blurb: "看原创简图说一分钟，或改用文字题。没有发音评分。" },
+    { title: "语法词汇练习", href: "#/quiz/grammar", blurb: "在句子和一封短信里填空，提交后看为什么。" },
+  ];
+}
+
+function lessonList() {
   const rows = state.course.lessons.map((lesson, index) => {
     const status = lessonStatus(state.progress, lesson.id);
+    const practice = lesson.quizId ? `<a class="button-secondary" href="#/quiz/${lesson.quizId}">做${escapeHtml(lesson.title)}练习</a>` : "";
     return `<li class="lesson-row">
       <span class="status ${status}">${statusLabel(status)}</span>
       <div>
         <a href="#/lesson/${lesson.id}">${index + 1}. ${escapeHtml(lesson.title)}</a>
-        <p class="muted">${escapeHtml(lesson.summary)} 约 ${lesson.minutes} 分钟阅读。</p>
+        <p class="muted">${escapeHtml(lesson.summary)}</p>
+        ${practice}
       </div>
-      ${lesson.quizId ? `<a class="text-link" href="#/quiz/${lesson.quizId}">练习</a>` : "<span></span>"}
     </li>`;
   }).join("");
-  const downloads = state.course.lessons.map((lesson) =>
-    `<li><a href="${escapeHtml(asset(lesson.file))}">${escapeHtml(lesson.title)}</a></li>`).join("");
-  return `<section class="hero">
-    <div>
-      <p class="kicker">打开即可学习</p>
-      <h1>准备 B1 Preliminary</h1>
-      <p class="lead">给大约 A2、正在走向 B1 的中文学习者。先读教程，再做自编练习。进度记在这个浏览器里。</p>
-      <div class="actions">${resume}<a class="button-secondary" href="#/progress">管理进度</a></div>
-    </div>
-    <aside class="card">
-      <p class="kicker">本机进度</p>
-      <p><strong>${done} / ${total}</strong> 课已标记完成</p>
-      <p class="muted">${escapeHtml(state.course.storageNote)}</p>
-      <p class="muted">已保存 ${state.progress.attempts.length} 次练习。</p>
-    </aside>
-  </section>
-  ${state.loadError ? `<aside class="banner warn"><strong>本地进度无法读取。</strong> ${escapeHtml(state.loadError)} 旧数据还留在浏览器里，没有被空进度覆盖。请到进度页确认后再清除。</aside>` : ""}
-  <h2>课程</h2>
-  <ol class="lesson-list">${rows}</ol>
-  <h2>下载 Markdown 原文</h2>
-  <ul>${downloads}
-    <li><a href="${escapeHtml(asset("tutorial/08-practice.md"))}">自编练习卷</a></li>
-    <li><a href="${escapeHtml(asset("tutorial/09-answer-keys.md"))}">参考答案与解析</a></li>
-  </ul>`;
+  return `<ol class="lesson-list">${rows}</ol>
+    <p><a href="${escapeHtml(asset("tutorial/09-answer-keys.md"))}">文字版参考答案（做完再打开）</a></p>`;
+}
+
+function viewPractice() {
+  const cards = practiceSkills().map((skill) => `<a class="practice-card" href="${skill.href}"><strong>${escapeHtml(skill.title)}</strong><span>${escapeHtml(skill.blurb)}</span></a>`).join("");
+  return `<h1>进阶练习</h1>
+    <p>这是 B1 Preliminary 的自编题，不是零基础第一课。</p>
+    ${unofficialBanner()}
+    <div class="practice-grid">${cards}</div>
+    <p><a href="#/task/writing-story">还有一道故事写作</a> · <a href="#/task/speaking-choice">还有一道口语选择讨论</a></p>`;
+}
+
+function starterLessonById(id) {
+  return starterCourse.lessons.find((lesson) => lesson.id === id) || null;
+}
+
+function saveStarterCursor(run) {
+  state.progress.starter = state.progress.starter || { completedIds: [], cursor: null, vocab: {}, badges: [] };
+  state.progress.starter.cursor = {
+    lessonId: run.lessonId,
+    phase: run.phase === "feedback" ? "activity" : run.phase,
+    index: run.index,
+    results: run.results,
+  };
+  state.progress = rememberStop(state.progress, { kind: "starter", id: run.lessonId });
+  save();
+}
+
+function beginStarterRun(lesson) {
+  const cursor = state.progress.starter?.cursor;
+  const same = cursor && cursor.lessonId === lesson.id;
+  starterRun = {
+    lessonId: lesson.id,
+    phase: same ? (cursor.phase === "summary" ? "summary" : cursor.phase) : "teach",
+    index: same ? cursor.index : 0,
+    listened: false,
+    usedTranscript: false,
+    built: [],
+    pool: null,
+    results: same && Array.isArray(cursor.results) ? cursor.results : [],
+    retry: [],
+    retryMode: false,
+    feedback: null,
+  };
+  if (starterRun.index >= lesson.activities.length) starterRun.phase = "summary";
+}
+
+function currentActivity(lesson) {
+  if (starterRun.retryMode) return starterRun.retry[0] ? lesson.activities.find((item) => item.id === starterRun.retry[0]) : null;
+  return lesson.activities[starterRun.index] || null;
+}
+
+function rememberVocab(activity, correct) {
+  const answers = [activity.answer, ...(activity.accept || []), activity.speak].filter(Boolean).map((item) => normaliseAnswer(item));
+  const source = starterLessonById(starterRun.lessonId).teach.find((item) => answers.includes(normaliseAnswer(item.en)) || answers.includes(normaliseAnswer(item.speak)));
+  if (!source) return;
+  const key = source.en.toLowerCase();
+  const vocab = state.progress.starter.vocab || {};
+  vocab[key] = scheduleCard({ ...(vocab[key] || {}), en: source.en, zh: source.zh }, correct);
+  state.progress.starter.vocab = vocab;
+}
+
+function viewStarterLesson(id) {
+  const lesson = starterLessonById(id);
+  if (!lesson) return `<h1>没有这一课</h1><p><a href="#/starter">返回</a></p>`;
+  state.progress.starter = state.progress.starter || { completedIds: [], cursor: null, vocab: {}, badges: [] };
+  if (!isLessonUnlocked(starterCourse.lessons, state.progress.starter.completedIds, id)) {
+    return `<h1>先完成上一课</h1><p><a class="button" href="#/starter">返回课程列表</a></p>`;
+  }
+  if (!starterRun || starterRun.lessonId !== id) beginStarterRun(lesson);
+  saveStarterCursor(starterRun);
+  if (starterRun.phase === "teach") return teachHtml(lesson);
+  if (starterRun.phase === "summary") {
+    const done = state.progress.starter.completedIds.includes(lesson.id);
+    return summaryHtml(lesson, starterRun.results, lessonLinkNext(lesson.id), done);
+  }
+  if (starterRun.phase === "feedback" && starterRun.feedback) return feedbackHtml(starterRun.feedback.activity, starterRun.feedback.result);
+  const activity = currentActivity(lesson);
+  if (!activity) {
+    starterRun.phase = "summary";
+    return summaryHtml(lesson, starterRun.results, lessonLinkNext(lesson.id), false);
+  }
+  const number = starterRun.retryMode ? starterRun.results.length : starterRun.index + 1;
+  return activityHtml(lesson, activity, starterRun, number, lesson.activities.length);
+}
+
+function lessonLinkNext(id) {
+  const index = starterCourse.lessons.findIndex((lesson) => lesson.id === id);
+  return starterCourse.lessons[index + 1]?.id || null;
+}
+
+function viewStarterReview() {
+  const vocab = state.progress.starter?.vocab || {};
+  const cards = dueCards(vocab);
+  const feedback = starterRun?.reviewFeedback;
+  starterRun = { reviewCard: cards[0] || null, reviewFeedback: null };
+  const banner = feedback ? `<aside class="banner ${feedback.correct ? "ok" : "warn"}">${feedback.correct ? "对了。这个词会按间隔再出现。" : `参考答案：${escapeHtml(feedback.expected)}。错了的词可以马上再做。`}</aside>` : "";
+  return banner + reviewHtml(cards);
 }
 
 function lessonActions(lesson) {
@@ -172,7 +314,7 @@ async function viewLesson(id) {
   const lesson = findLesson(id);
   if (!lesson) return `<h1>没有这一课</h1><p><a href="#/">回到课程</a></p>`;
   if (!state.storageBlocked) {
-    state.progress = touchLesson(state.progress, lesson.id);
+    state.progress = rememberStop(touchLesson(state.progress, lesson.id), { kind: "lesson", id: lesson.id });
     save();
   }
   let article = "";
@@ -210,6 +352,9 @@ function questionField(question, index) {
 function sectionBody(section, startIndex, showScript) {
   let html = `<section><h2>${escapeHtml(section.title)}</h2>`;
   if (section.intro) html += `<p>${escapeHtml(section.intro)}</p>`;
+  if (section.example) {
+    html += `<aside class="card example"><p class="kicker">例题</p><p>${escapeHtml(section.example.prompt)}</p><p><strong>例题答案：${escapeHtml(section.example.answer)}</strong></p><p>${escapeHtml(section.example.why)}</p></aside><h3>现在自己做</h3>`;
+  }
   if (section.text) html += `<p class="stimulus">${escapeHtml(section.text)}</p>`;
   if (section.audioScript && showScript) {
     html += `<p class="stimulus">${escapeHtml(section.audioScript)}</p>`;
@@ -231,9 +376,12 @@ function resultsBody(attempt) {
       : "这次使用了文字稿或没有完成播放，只作为阅读支持，不记为听力成绩。")
     : "";
   const items = attempt.details.map((detail) => {
-    const mark = detail.correct ? "正确" : "错误";
-    return `<article class="result-item ${detail.correct ? "correct" : "wrong"}">
-      <p class="mark ${detail.correct ? "correct" : "wrong"}">${mark}</p>
+    const mark = attempt.selfAssessed
+      ? (detail.correct ? "已勾选" : "未勾选")
+      : (detail.correct ? "正确" : "错误");
+    const tone = attempt.selfAssessed ? "self" : (detail.correct ? "correct" : "wrong");
+    return `<article class="result-item ${tone}">
+      <p class="mark ${tone}">${mark}</p>
       <p>${escapeHtml(detail.prompt)}</p>
       <p>你的答案：${escapeHtml(detail.responseLabel || detail.response || "（未作答）")}</p>
       <p>参考答案：${escapeHtml(detail.expectedLabel)}</p>
@@ -241,9 +389,10 @@ function resultsBody(attempt) {
     </article>`;
   }).join("");
   return `<div aria-live="polite">
-    <aside class="banner ${attempt.score === attempt.total ? "ok" : "warn"}">
-      <strong>${attempt.score} / ${attempt.total}</strong>
-      <p>${escapeHtml(listeningNote)}</p>
+    <aside class="banner ${attempt.selfAssessed ? "unofficial" : (attempt.score === attempt.total ? "ok" : "warn")}">
+      <strong>${attempt.selfAssessed ? "自评" : "得分"} ${attempt.score} / ${attempt.total}</strong>
+      <p>${attempt.selfAssessed ? "这是你自己勾选的检查项，不是考官分数，也不是发音评分。" : escapeHtml(listeningNote)}</p>
+      ${attempt.responseText ? `<p class="stimulus">${escapeHtml(attempt.responseText)}</p>` : ""}
     </aside>
     ${items}
     <div class="actions">
@@ -260,18 +409,28 @@ function viewQuiz(id) {
   if (!quiz) return `<h1>没有这个练习</h1><p><a href="#/">回到课程</a></p>`;
   ensureSession(quiz);
   const lesson = findLesson(quiz.lessonId);
-  if (lesson && !state.storageBlocked && state.progress.lastLessonId !== lesson.id) {
-    state.progress = touchLesson(state.progress, lesson.id);
+  if (lesson && !state.storageBlocked && state.progress.lastStop?.id !== quiz.id) {
+    state.progress = rememberStop(touchLesson(state.progress, lesson.id), { kind: "quiz", id: quiz.id });
     save();
   }
   let body = "";
   if (quizSession.result) {
     body = resultsBody(quizSession.result);
+    if (quiz.kind === "listening-tts") {
+      const scripts = quizSections(quiz).filter((section) => section.audioScript).map((section) =>
+        `<h3>${escapeHtml(section.title)}</h3><p class="stimulus">${escapeHtml(section.audioScript)}</p>`).join("");
+      body += `<section><h2>交卷后才显示的文字稿</h2><p>用来核对听写。打开文字稿再作答的那次，不会记为听力分。</p>${scripts}</section>`;
+    }
   } else if (quiz.kind === "listening-tts" && !quizSession.mode) {
-    body = `<div class="actions">
-      <button type="button" class="primary" data-action="choose-mode" data-mode="tts">播放语音练习（记为非正式听力）</button>
-      <button type="button" class="secondary" data-action="choose-mode" data-mode="transcript-support">改用文字稿（不记为听力）</button>
-    </div>`;
+    const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window;
+    body = canSpeak
+      ? `<p>先播放，再做题。交卷前不显示文字稿。</p>
+         <div class="actions">
+           <button type="button" class="primary large" data-action="listen-start">播放录音（浏览器合成，非正式听力）</button>
+           <button type="button" class="secondary" data-action="choose-mode" data-mode="transcript-support">无法播放，改看文字稿（不记听力分）</button>
+         </div>`
+      : `<aside class="banner warn">这个浏览器不能合成语音，所以不能记听力分。可以改看文字稿，或到剑桥备考页听官方样卷。</aside>
+         <button type="button" class="secondary" data-action="choose-mode" data-mode="transcript-support">改看文字稿（不记听力分）</button>`;
   } else {
     const showScript = quizSession.mode === "transcript-support";
     let index = 1;
@@ -303,11 +462,66 @@ function viewQuiz(id) {
     ${body}`;
 }
 
+function viewTask(id) {
+  const task = findTask(id);
+  if (!task) return `<h1>没有这个练习</h1><p><a href="#/practice">回到练习</a></p>`;
+  if (!taskSession || taskSession.id !== id) taskSession = { id, revealed: false, saved: false };
+  if (!state.storageBlocked && state.progress.lastStop?.id !== id) {
+    state.progress = rememberStop(state.progress, { kind: "task", id });
+    save();
+  }
+  const draft = state.progress.drafts?.[id] || "";
+  const words = countWords(draft);
+  const example = task.example
+    ? `<aside class="card example"><p class="kicker">先看这个短例</p><p>${escapeHtml(task.example.prompt)}</p><p class="stimulus">${escapeHtml(task.example.answer)}</p></aside>`
+    : "";
+  const notes = (task.notes || []).map((note) => `<li>${escapeHtml(note)}</li>`).join("");
+  const image = task.image
+    ? `<figure class="task-figure"><img src="${escapeHtml(asset(task.image))}" alt="${escapeHtml(task.imageAlt || "练习用原创简图")}">
+        <details><summary>图片无法显示时，打开文字题</summary><p>${escapeHtml(task.textAlternative || "")}</p></details></figure>`
+    : "";
+  const writing = task.model
+    ? `<label for="task-draft">你的英文</label>
+       <textarea id="task-draft" data-task="${escapeHtml(task.id)}" rows="10">${escapeHtml(draft)}</textarea>
+       <p id="word-count" aria-live="polite">当前 ${words} 词，目标约 ${task.targetWords} 词。</p>`
+    : `<p>计时器只帮助你说够时间。它不录音，也不评分。</p>
+       <button type="button" class="secondary" data-action="start-timer" data-seconds="${task.seconds || 60}">开始 ${task.seconds || 60} 秒</button>
+       <p id="timer-readout" aria-live="polite">尚未开始</p>`;
+  const after = taskSession.revealed
+    ? `<section class="card"><h2>${task.model ? "范文（交卷后才显示）" : "示例回答（说完才显示）"}</h2>
+        <p class="stimulus">${escapeHtml(task.model || task.exampleAnswer)}</p>
+        <form id="self-check">
+          <fieldset><legend>自评，不是考官打分</legend>
+            ${(task.rubric || []).map((item) => `<label><input type="checkbox" name="rubric" value="${escapeHtml(item.id)}"> <span>${escapeHtml(item.text)} ${escapeHtml(item.hint || "")}</span></label>`).join("")}
+          </fieldset>
+          <button type="submit" class="primary">保存这次自评</button>
+        </form>
+        ${taskSession.saved ? `<p class="banner ok">已保存在这个浏览器。这不是考试分数。</p>` : ""}
+      </section>`
+    : `<button type="button" class="primary large" data-action="reveal-task" data-task="${escapeHtml(task.id)}">${task.model ? "我写完了，查看范文和自评" : "我已说完，查看示例和自评"}</button>`;
+  return `<p class="kicker"><a href="#/practice">全部练习</a></p>
+    <h1>${escapeHtml(task.title)}</h1>
+    ${unofficialBanner(task.model ? "" : " 不评估发音。")}
+    <p>${escapeHtml(task.instructions)}</p>
+    ${example}
+    <h2>现在自己做</h2>
+    <p>${escapeHtml(task.prompt)}</p>
+    ${task.stimulus ? `<p class="stimulus">${escapeHtml(task.stimulus)}</p>` : ""}
+    ${notes ? `<ul>${notes}</ul>` : ""}
+    ${image}
+    ${writing}
+    <div class="actions">${after}</div>
+    ${task.id === "writing-email" ? `<p><a href="#/task/writing-story">下一题：写故事</a></p>` : ""}
+    ${task.id === "speaking-photo" ? `<p><a href="#/task/speaking-choice">下一题：比较并选择</a></p>` : ""}`;
+}
+
 function viewReview() {
   const attempts = [...state.progress.attempts].reverse();
   if (!attempts.length) return `<h1>练习记录</h1><p>还没有提交过练习。</p>`;
   const items = attempts.map((attempt) => {
-    const flag = attempt.kind === "listening-tts" ? (attempt.countsAsListening ? "非正式听力" : "文字稿支持，非听力分") : "知识练习";
+    const flag = attempt.selfAssessed
+      ? "自评，不是考官分"
+      : (attempt.kind === "listening-tts" ? (attempt.countsAsListening ? "非正式听力" : "文字稿支持，非听力分") : "客观题");
     return `<li class="lesson-row"><div><a href="#/review/${encodeURIComponent(attempt.id)}">${escapeHtml(attempt.title)}</a><p class="muted">${formatWhen(attempt.finishedAt)} · ${escapeHtml(flag)}</p></div><strong>${attempt.score} / ${attempt.total}</strong></li>`;
   }).join("");
   return `<h1>练习记录</h1><ol class="lesson-list">${items}</ol>`;
@@ -371,14 +585,25 @@ async function render() {
   document.title = "B1 Preliminary 自学站";
   let html = "";
   if (route.name === "home") html = viewHome();
+  else if (route.name === "practice") html = viewPractice();
+  else if (route.name === "starter") html = starterPathHtml(starterCourse, state.progress.starter || { completedIds: [], vocab: {} });
+  else if (route.name === "starter-review") html = viewStarterReview();
+  else if (route.name === "starter-lesson") html = viewStarterLesson(route.id);
   else if (route.name === "lesson") html = await viewLesson(route.id);
   else if (route.name === "quiz") html = viewQuiz(route.id);
+  else if (route.name === "task") html = viewTask(route.id);
   else if (route.name === "review") html = viewReview();
   else if (route.name === "attempt") html = viewAttempt(route.id);
   else if (route.name === "wrong") html = viewWrong();
   else if (route.name === "progress") html = viewProgress();
   else html = `<h1>页面不存在</h1><p><a href="#/">回到课程</a></p>`;
   main.innerHTML = html;
+  const pending = quizSession?.pendingSpeak;
+  if (pending) {
+    quizSession.pendingSpeak = null;
+    const button = document.querySelector(`[data-action="speak"][data-section="${CSS.escape(pending)}"]`);
+    if (button) speak(pending, button);
+  }
   main.focus({ preventScroll: true });
   window.scrollTo(0, 0);
 }
@@ -461,11 +686,61 @@ function speak(sectionId, button) {
   window.speechSynthesis.speak(utterance);
 }
 
-function startTimer() {
+function starterSpeak(text, rate) {
+  if (!window.speechSynthesis) {
+    const note = document.querySelector("#starter-record-note");
+    if (note) note.textContent = "这个浏览器不能合成语音。请使用“听不了，显示文字”。";
+    return false;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  utterance.rate = Number(rate) || 0.9;
+  utterance.onend = () => {
+    if (starterRun) starterRun.listened = true;
+  };
+  window.speechSynthesis.speak(utterance);
+  return true;
+}
+
+async function starterRecord() {
+  const note = document.querySelector("#starter-record-note");
+  if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+    if (note) note.textContent = "这台设备不能在网页里录音。请跟着播放的声音读，然后勾选自评。录音不会上传，因为根本没有开始。";
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    recordStream = stream;
+    const recorder = new MediaRecorder(stream);
+    const chunks = [];
+    recorder.ondataavailable = (event) => {
+      if (event.data.size) chunks.push(event.data);
+    };
+    recorder.onstop = () => {
+      stream.getTracks().forEach((track) => track.stop());
+      recordStream = null;
+      const audio = document.querySelector("#starter-playback");
+      if (audio) {
+        audio.hidden = false;
+        audio.src = URL.createObjectURL(new Blob(chunks, { type: recorder.mimeType || "audio/webm" }));
+      }
+      if (note) note.textContent = "回放只在这台设备上。没有上传，也没有发音评分。";
+    };
+    recorder.start();
+    if (note) note.textContent = "正在录音 4 秒……";
+    setTimeout(() => {
+      if (recorder.state === "recording") recorder.stop();
+    }, 4000);
+  } catch {
+    if (note) note.textContent = "没有拿到麦克风权限。可以只跟读并勾选自评，不影响客观题分数。";
+  }
+}
+  function startTimer(seconds = 60) {
   if (timerId) clearInterval(timerId);
-  let left = 60;
+  let left = Number(seconds) || 60;
   const readout = document.querySelector("#timer-readout");
-  if (readout) readout.textContent = "剩余 60 秒";
+  if (readout) readout.textContent = `剩余 ${left} 秒`;
   timerId = setInterval(() => {
     left -= 1;
     const node = document.querySelector("#timer-readout");
@@ -504,7 +779,7 @@ function performReset() {
 
 async function readImport(file) {
   const text = await file.text();
-  const result = validateImport(text, lessonIds(), quizIds());
+  const result = validateStored(text);
   state.importPreview = result.ok ? { progress: result.progress } : { error: result.error };
   render();
 }
@@ -535,6 +810,14 @@ function onClick(event) {
     quizSession.listened = false;
     quizSession.result = null;
     render();
+  } else if (action === "listen-start") {
+    const quiz = findQuiz(quizSession.quizId);
+    const first = quizSections(quiz).find((section) => section.audioScript);
+    quizSession.mode = "tts";
+    quizSession.listened = false;
+    quizSession.result = null;
+    quizSession.pendingSpeak = first?.id || null;
+    render();
   } else if (action === "speak") {
     speak(target.dataset.section, target);
   } else if (action === "submit-anyway") {
@@ -545,7 +828,44 @@ function onClick(event) {
     location.hash = `#/quiz/${target.dataset.quiz}`;
     render();
   } else if (action === "start-timer") {
-    startTimer();
+    startTimer(target.dataset.seconds || 60);
+  } else if (action === "reveal-task") {
+    if (taskSession) taskSession.revealed = true;
+    render();
+  } else if (action === "starter-speak") {
+    const ok = starterSpeak(target.dataset.text || "", target.dataset.rate || "0.9");
+    if (!ok) {
+      const mainText = document.querySelector("#main");
+      if (mainText && !document.querySelector("#tts-missing")) {
+        mainText.insertAdjacentHTML("afterbegin", `<aside id="tts-missing" class="banner warn">这个浏览器不能朗读。听力题请点“听不了，显示文字”。那样做不记听力分。</aside>`);
+      }
+    }
+  } else if (action === "starter-start") {
+    starterRun.phase = "activity";
+    starterRun.index = 0;
+    starterRun.listened = false;
+    saveStarterCursor(starterRun);
+    render();
+  } else if (action === "starter-transcript") {
+    starterRun.usedTranscript = true;
+    starterRun.listened = false;
+    render();
+  } else if (action === "starter-add") {
+    starterRun.built = [...(starterRun.built || []), target.dataset.token];
+    const built = document.querySelector("#starter-built");
+    if (built) built.textContent = starterRun.built.join(" ");
+  } else if (action === "starter-undo") {
+    starterRun.built = (starterRun.built || []).slice(0, -1);
+    const built = document.querySelector("#starter-built");
+    if (built) built.textContent = starterRun.built.join(" ") || "按顺序点下面的词";
+  } else if (action === "starter-submit") {
+    submitStarterActivity();
+  } else if (action === "starter-next") {
+    advanceStarter();
+  } else if (action === "starter-finish") {
+    finishStarterLesson();
+  } else if (action === "starter-record") {
+    starterRecord();
   } else if (action === "export-progress") {
     const blob = new Blob([JSON.stringify(buildExport(state.progress), null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -573,11 +893,28 @@ document.addEventListener("submit", (event) => {
     event.preventDefault();
     submitQuiz(event.target);
   }
+  if (event.target.id === "self-check") {
+    event.preventDefault();
+    submitSelfCheck(event.target);
+  }
+  if (event.target.id === "starter-review-form") {
+    event.preventDefault();
+    submitStarterReview(event.target);
+  }
 });
 document.addEventListener("input", (event) => {
   if (event.target.id === "reset-phrase") {
     const button = document.querySelector("#reset-confirm");
     if (button) button.disabled = !resetConfirmed(event.target.value);
+  }
+  if (event.target.id === "task-draft") {
+    const taskId = event.target.dataset.task;
+    if (!taskId || state.storageBlocked) return;
+    state.progress = saveDraft(state.progress, taskId, event.target.value);
+    save();
+    const count = document.querySelector("#word-count");
+    const task = findTask(taskId);
+    if (count && task) count.textContent = `当前 ${countWords(event.target.value)} 词，目标约 ${task.targetWords} 词。`;
   }
 });
 document.addEventListener("change", (event) => {
@@ -587,19 +924,145 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeReset();
 });
 
+function submitStarterActivity() {
+  const lesson = starterLessonById(starterRun.lessonId);
+  const activity = currentActivity(lesson);
+  if (!activity) return;
+  const ttsAvailable = typeof window.speechSynthesis !== "undefined";
+  if ((activity.type === "hear-choose" || activity.type === "dictation") && ttsAvailable && !starterRun.listened && !starterRun.usedTranscript) {
+    const host = document.querySelector("#main");
+    if (host && !document.querySelector("#need-listen")) {
+      host.insertAdjacentHTML("afterbegin", `<aside id="need-listen" class="banner warn">请先点播放。如果没有声音，点“听不了，显示文字”。看文字不算听力分。</aside>`);
+    }
+    return;
+  }
+  const input = {
+    choice: document.querySelector("input[name='starter-choice']:checked")?.value || "",
+    text: document.querySelector("#starter-answer")?.value || "",
+    order: starterRun.built || [],
+  };
+  const result = gradeActivity(activity, input, {
+    ttsAvailable,
+    listened: starterRun.listened === true,
+    usedTranscript: starterRun.usedTranscript === true || !ttsAvailable,
+  });
+  const record = {
+    id: activity.id,
+    objective: result.objective,
+    correct: result.correct,
+    countsAsListening: result.countsAsListening,
+    selfAssessed: result.selfAssessed,
+  };
+  const existing = starterRun.results.find((item) => item.id === activity.id);
+  if (existing && starterRun.retryMode) Object.assign(existing, record);
+  else if (!starterRun.retryMode) starterRun.results.push(record);
+  if (result.objective) rememberVocab(activity, result.correct);
+  if (result.objective && !result.correct && !starterRun.retry.includes(activity.id)) starterRun.retry.push(activity.id);
+  starterRun.feedback = { activity, result };
+  starterRun.phase = "feedback";
+  saveStarterCursor(starterRun);
+  render();
+}
+
+function advanceStarter() {
+  const lesson = starterLessonById(starterRun.lessonId);
+  starterRun.listened = false;
+  starterRun.usedTranscript = false;
+  starterRun.built = [];
+  starterRun.feedback = null;
+  if (starterRun.retryMode) {
+    starterRun.retry.shift();
+    starterRun.phase = starterRun.retry.length ? "activity" : "summary";
+  } else {
+    starterRun.index += 1;
+    if (starterRun.index >= lesson.activities.length) {
+      starterRun.retryMode = starterRun.retry.length > 0;
+      starterRun.phase = starterRun.retryMode ? "activity" : "summary";
+    } else {
+      starterRun.phase = "activity";
+    }
+  }
+  saveStarterCursor(starterRun);
+  render();
+}
+
+function finishStarterLesson() {
+  const id = starterRun.lessonId;
+  const completed = new Set(state.progress.starter.completedIds || []);
+  completed.add(id);
+  state.progress.starter.completedIds = [...completed];
+  if (!(state.progress.starter.badges || []).includes(id)) {
+    state.progress.starter.badges = [...(state.progress.starter.badges || []), id];
+  }
+  starterRun.phase = "summary";
+  saveStarterCursor(starterRun);
+  render();
+}
+
+function submitStarterReview(form) {
+  const card = starterRun?.reviewCard;
+  if (!card) return;
+  const correct = normaliseAnswer(form.answer.value) === normaliseAnswer(card.en);
+  const key = card.en.toLowerCase();
+  state.progress.starter.vocab[key] = scheduleCard(state.progress.starter.vocab[key], correct);
+  save();
+  starterRun.reviewFeedback = { correct, expected: card.en };
+  render();
+}
+
+function submitSelfCheck(form) {
+  const task = findTask(taskSession?.id);
+  if (!task || state.storageBlocked) return;
+  const checked = new Set([...form.querySelectorAll("input[name='rubric']:checked")].map((item) => item.value));
+  const details = (task.rubric || []).map((item) => ({
+    id: item.id,
+    prompt: item.text,
+    response: checked.has(item.id) ? "yes" : "no",
+    responseLabel: checked.has(item.id) ? "已勾选" : "未勾选",
+    correct: checked.has(item.id),
+    expectedLabel: "自评项",
+    explanation: item.hint || "",
+  }));
+  const draft = state.progress.drafts?.[task.id] || "";
+  const attempt = {
+    id: crypto.randomUUID(),
+    quizId: task.id,
+    lessonId: task.lessonId,
+    title: task.title,
+    finishedAt: new Date().toISOString(),
+    unofficial: true,
+    kind: "self-check",
+    mode: "standard",
+    countsAsListening: false,
+    selfAssessed: true,
+    responseText: draft,
+    score: details.filter((item) => item.correct).length,
+    total: details.length,
+    details,
+  };
+  state.progress = addAttempt(state.progress, attempt);
+  save();
+  taskSession.saved = true;
+  taskSession.revealed = true;
+  render();
+}
+
 async function init() {
   try {
-    const [courseResponse, quizResponse] = await Promise.all([
+    const [courseResponse, quizResponse, taskResponse] = await Promise.all([
       fetch(asset("data/course.json")),
       fetch(asset("data/quizzes.json")),
+      fetch(asset("data/tasks.json")),
     ]);
-    if (!courseResponse.ok || !quizResponse.ok) throw new Error("课程文件没有加载成功");
+    if (!courseResponse.ok || !quizResponse.ok || !taskResponse.ok) throw new Error("课程文件没有加载成功");
     state.course = await courseResponse.json();
     const quizFile = await quizResponse.json();
     state.quizzes = new Map(quizFile.quizzes.map((quiz) => [quiz.id, quiz]));
+    const taskFile = await taskResponse.json();
+    state.tasks = new Map(taskFile.tasks.map((task) => [task.id, task]));
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      const result = validateImport(raw, lessonIds(), quizIds());
+      const result = validateStored(raw);
       if (!result.ok) {
         state.storageBlocked = true;
         state.loadError = result.error;

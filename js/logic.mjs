@@ -5,12 +5,25 @@ export const RESET_PHRASE = "清除进度";
 export const MAX_IMPORT_CHARS = 1_000_000;
 export const MAX_ATTEMPTS = 500;
 
+export function emptyStarter() {
+  return { completedIds: [], cursor: null, vocab: {}, badges: [] };
+}
+
 export function emptyProgress() {
   return {
     completedLessonIds: [],
     lastLessonId: null,
+    lastStop: null,
+    drafts: {},
     attempts: [],
+    starter: emptyStarter(),
   };
+}
+
+export function countWords(text) {
+  const trimmed = String(text ?? "").trim();
+  if (!trimmed) return 0;
+  return trimmed.split(/\s+/).filter(Boolean).length;
 }
 
 export function normaliseText(value) {
@@ -130,9 +143,22 @@ export function addAttempt(progress, attempt) {
   };
 }
 
+export function saveDraft(progress, taskId, text) {
+  return {
+    ...progress,
+    drafts: { ...(progress.drafts || {}), [taskId]: String(text ?? "").slice(0, 8000) },
+    lastStop: { kind: "task", id: taskId },
+  };
+}
+
+export function rememberStop(progress, stop) {
+  return { ...progress, lastStop: stop };
+}
+
 export function wrongItems(progress) {
   const items = [];
   for (const attempt of progress.attempts) {
+    if (attempt.selfAssessed) continue;
     for (const detail of attempt.details) {
       if (!detail.correct) {
         items.push({
@@ -159,7 +185,10 @@ export function buildExport(progress, now = new Date()) {
     data: {
       completedLessonIds: [...progress.completedLessonIds],
       lastLessonId: progress.lastLessonId,
+      lastStop: progress.lastStop ?? null,
+      drafts: progress.drafts || {},
       attempts: progress.attempts,
+      starter: progress.starter || emptyStarter(),
     },
   };
 }
@@ -224,6 +253,8 @@ function validateAttempt(attempt, quizIds) {
       kind: typeof attempt.kind === "string" ? attempt.kind.slice(0, 40) : "standard",
       mode,
       countsAsListening: attempt.countsAsListening === true && mode === "tts",
+      selfAssessed: attempt.selfAssessed === true,
+      responseText: typeof attempt.responseText === "string" ? attempt.responseText.slice(0, 8000) : "",
       score: attempt.score,
       total: attempt.total,
       details,
@@ -231,7 +262,73 @@ function validateAttempt(attempt, quizIds) {
   };
 }
 
-export function validateImport(raw, knownLessonIds, knownQuizIds) {
+function validateDrafts(drafts, taskIds) {
+  if (drafts == null) return { ok: true, drafts: {} };
+  if (typeof drafts !== "object" || Array.isArray(drafts)) return fail("drafts 必须是对象。");
+  const keys = Object.keys(drafts);
+  if (keys.length > 40) return fail("草稿过多。");
+  const clean = {};
+  for (const key of keys) {
+    if (typeof key !== "string" || !taskIds.has(key)) return fail(`未知草稿：${key}`);
+    if (typeof drafts[key] !== "string") return fail("草稿必须是文字。");
+    clean[key] = drafts[key].slice(0, 8000);
+  }
+  return { ok: true, drafts: clean };
+}
+
+function validateLastStop(stop, lessonIds, quizIds) {
+  if (stop == null) return { ok: true, lastStop: null };
+  if (typeof stop !== "object" || Array.isArray(stop)) return fail("lastStop 无效。");
+  const kinds = ["lesson", "quiz", "task", "starter"];
+  if (!kinds.includes(stop.kind) || typeof stop.id !== "string") return fail("lastStop 无效。");
+  if (stop.kind === "lesson" && !lessonIds.has(stop.id)) return fail("lastStop 课程无效。");
+  if (stop.kind === "starter" && !/^s\d{2}$/.test(stop.id)) return fail("lastStop 练习无效。");
+  if (stop.kind !== "lesson" && stop.kind !== "starter" && !quizIds.has(stop.id)) return fail("lastStop 练习无效。");
+  return { ok: true, lastStop: { kind: stop.kind, id: stop.id } };
+}
+
+function validateStarter(starter) {
+  if (starter == null) return { ok: true, starter: emptyStarter() };
+  if (typeof starter !== "object" || Array.isArray(starter)) return fail("starter 进度无效。");
+  if (starter.completedIds != null && !Array.isArray(starter.completedIds)) return fail("starter.completedIds 无效。");
+  const completedIds = [];
+  for (const id of starter.completedIds || []) {
+    if (typeof id !== "string" || !/^s\d{2}$/.test(id)) return fail(`未知零基础课：${String(id)}`);
+    completedIds.push(id);
+  }
+  let cursor = null;
+  if (starter.cursor != null) {
+    const cursorOk = starter.cursor && typeof starter.cursor === "object" && /^s\d{2}$/.test(starter.cursor.lessonId) && ["teach", "activity", "summary"].includes(starter.cursor.phase) && Number.isInteger(starter.cursor.index);
+    if (!cursorOk) return fail("starter.cursor 无效。");
+    const results = Array.isArray(starter.cursor.results) ? starter.cursor.results.slice(0, 40).filter((item) => item && typeof item.id === "string").map((item) => ({
+      id: item.id.slice(0, 40),
+      objective: item.objective === true,
+      correct: item.correct === true,
+      countsAsListening: item.countsAsListening === true,
+      selfAssessed: item.selfAssessed === true,
+    })) : [];
+    cursor = { lessonId: starter.cursor.lessonId, phase: starter.cursor.phase, index: starter.cursor.index, results };
+  }
+  const vocab = {};
+  const entries = Object.entries(starter.vocab || {});
+  if (entries.length > 300) return fail("词汇复习记录过多。");
+  for (const [key, card] of entries) {
+    if (!card || typeof card !== "object") return fail("词汇卡片无效。");
+    if (typeof card.en !== "string" || typeof card.zh !== "string") return fail("词汇卡片无效。");
+    vocab[String(key).slice(0, 80)] = {
+      en: card.en.slice(0, 80),
+      zh: card.zh.slice(0, 80),
+      stage: Math.max(0, Math.min(4, Number(card.stage) || 0)),
+      dueAt: Number(card.dueAt) || 0,
+      correct: Math.max(0, Number(card.correct) || 0),
+      wrong: Math.max(0, Number(card.wrong) || 0),
+    };
+  }
+  const badges = Array.isArray(starter.badges) ? starter.badges.filter((id) => typeof id === "string" && /^s\d{2}/.test(id)).slice(0, 40) : [];
+  return { ok: true, starter: { completedIds: [...new Set(completedIds)], cursor, vocab, badges } };
+}
+
+export function validateImport(raw, knownLessonIds, knownQuizIds, knownTaskIds) {
   if (typeof raw !== "string") return fail("导入内容必须是文本。");
   if (raw.length === 0) return fail("文件是空的。");
   if (raw.length > MAX_IMPORT_CHARS) return fail("文件过大，已拒绝导入。");
@@ -261,6 +358,13 @@ export function validateImport(raw, knownLessonIds, knownQuizIds) {
   if (!Array.isArray(data.attempts)) return fail("attempts 必须是数组。");
   if (data.attempts.length > MAX_ATTEMPTS) return fail("练习记录过多，已拒绝导入。");
   const quizIds = new Set(knownQuizIds);
+  const taskIds = new Set(knownTaskIds || knownQuizIds);
+  const draftResult = validateDrafts(data.drafts, taskIds);
+  if (!draftResult.ok) return draftResult;
+  const stopResult = validateLastStop(data.lastStop, lessonIds, quizIds);
+  if (!stopResult.ok) return stopResult;
+  const starterResult = validateStarter(data.starter);
+  if (!starterResult.ok) return starterResult;
   const attempts = [];
   for (const attempt of data.attempts) {
     const checked = validateAttempt(attempt, quizIds);
@@ -272,7 +376,10 @@ export function validateImport(raw, knownLessonIds, knownQuizIds) {
     progress: {
       completedLessonIds: [...new Set(data.completedLessonIds)],
       lastLessonId: data.lastLessonId ?? null,
+      lastStop: stopResult.lastStop,
+      drafts: draftResult.drafts,
       attempts,
+      starter: starterResult.starter,
     },
   };
 }

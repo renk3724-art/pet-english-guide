@@ -5,6 +5,7 @@ import course from "../data/course.json" with { type: "json" };
 import quizFile from "../data/quizzes.json" with { type: "json" };
 import {
   buildExport,
+  countWords,
   emptyProgress,
   flattenQuestions,
   listeningCredit,
@@ -96,6 +97,73 @@ test("export and import round-trip, and bad files are rejected", () => {
   const unknownLesson = JSON.parse(raw);
   unknownLesson.data.completedLessonIds.push("not-a-lesson");
   assert.match(validateImport(JSON.stringify(unknownLesson), lessonIds, quizIds).error, /未知课程/);
+});
+
+test("version 1 progress without drafts still imports", () => {
+  const legacy = {
+    format: "pet-english-guide-progress",
+    version: 1,
+    exportedAt: "2026-11-07T00:00:00.000Z",
+    data: {
+      completedLessonIds: ["overview"],
+      lastLessonId: "overview",
+      attempts: [],
+    },
+  };
+  const imported = validateImport(JSON.stringify(legacy), lessonIds, quizIds, ["writing-email"]);
+  assert.equal(imported.ok, true);
+  assert.deepEqual(imported.progress.drafts, {});
+  assert.equal(imported.progress.lastStop, null);
+  assert.deepEqual(imported.progress.completedLessonIds, ["overview"]);
+});
+
+test("drafts and self-assessed writing stay compatible with objective wrong answers", () => {
+  const quiz = quizFile.quizzes.find((item) => item.id === "overview");
+  const responses = {};
+  for (const section of quiz.sections) {
+    for (const question of section.questions) responses[question.id] = question.answer;
+  }
+  responses.ov1 = "A";
+  const scored = scoreQuiz(quiz, responses, { lessonId: "overview" });
+  const progress = {
+    completedLessonIds: [],
+    lastLessonId: null,
+    lastStop: { kind: "task", id: "writing-email" },
+    drafts: { "writing-email": "Hi Priya, I can help in the afternoon." },
+    attempts: [
+      { ...scored, id: "attempt-old", finishedAt: "2026-11-07T00:00:00.000Z" },
+      {
+        id: "attempt-write",
+        quizId: "writing-email",
+        lessonId: "writing",
+        title: "写作：回复一封邮件",
+        finishedAt: "2026-11-07T01:00:00.000Z",
+        kind: "self-check",
+        mode: "standard",
+        selfAssessed: true,
+        responseText: "Hi Priya, I can help in the afternoon because I have class.",
+        score: 1,
+        total: 1,
+        details: [{
+          id: "afternoon",
+          prompt: "我写了下午",
+          response: "yes",
+          responseLabel: "已勾选",
+          correct: true,
+          expectedLabel: "自评项",
+          explanation: "原因",
+        }],
+      },
+    ],
+  };
+  const raw = JSON.stringify(buildExport(progress, new Date("2026-11-07T01:00:00.000Z")));
+  const imported = validateImport(raw, lessonIds, [...quizIds, "writing-email"], ["writing-email"]);
+  assert.equal(imported.ok, true);
+  assert.match(imported.progress.drafts["writing-email"], /afternoon/);
+  assert.equal(imported.progress.attempts[1].selfAssessed, true);
+  assert.equal(wrongItems(imported.progress).length, 1);
+  assert.equal(wrongItems(imported.progress)[0].id, "ov1");
+  assert.equal(countWords("Hi Priya I can help"), 5);
 });
 
 test("reset requires the exact confirmation phrase", () => {

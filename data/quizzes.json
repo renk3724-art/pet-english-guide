@@ -19,9 +19,18 @@
               "type": "single",
               "prompt": "阅读试卷的考试时间是多久？",
               "options": [
-                {"id": "A", "text": "30 分钟"},
-                {"id": "B", "text": "45 分钟"},
-                {"id": "C", "text": "60 分钟"}
+                {
+                  "id": "A",
+                  "text": "30 分钟"
+                },
+                {
+                  "id": "B",
+                  "text": "45 分钟"
+                },
+                {
+                  "id": "C",
+                  "text": "60 分钟"
+                }
               ],
               "answer": "B",
               "explanation": "官方考试形式页写明阅读为 45 分钟，共 6 个部分、32 题，占总分 25%。"
@@ -31,9 +40,18 @@
               "type": "single",
               "prompt": "听力一共有多少道题？",
               "options": [
-                {"id": "A", "text": "25 题"},
-                {"id": "B", "text": "32 题"},
-                {"id": "C", "text": "30 题"}
+                {
+                  "id": "A",
+                  "text": "25 题"
+                },
+                {
+                  "id": "B",
+                  "text": "32 题"
+                },
+                {
+                  "id": "C",
+                  "text": "30 题"
+                }
               ],
               "answer": "A",
               "explanation": "听力是 4 个部分、25 题。阅读才是 32 题。不要把两份试卷的题量记混。"
@@ -43,9 +61,18 @@
               "type": "single",
               "prompt": "写作 Part 1 和 Part 2 各自要求大约写多少词？",
               "options": [
-                {"id": "A", "text": "大约 50 词"},
-                {"id": "B", "text": "大约 100 词"},
-                {"id": "C", "text": "大约 250 词"}
+                {
+                  "id": "A",
+                  "text": "大约 50 词"
+                },
+                {
+                  "id": "B",
+                  "text": "大约 100 词"
+                },
+                {
+                  "id": "C",
+                  "text": "大约 250 词"
+                }
               ],
               "answer": "B",
               "explanation": "两道写作题都是大约 100 词。词数是指南：太短容易漏掉内容点，太长容易写进无关信息。"
@@ -55,9 +82,18 @@
               "type": "single",
               "prompt": "Cambridge English Scale 上，Grade C 对应哪一段分数？",
               "options": [
-                {"id": "A", "text": "160–170"},
-                {"id": "B", "text": "153–159"},
-                {"id": "C", "text": "140–152"}
+                {
+                  "id": "A",
+                  "text": "160–170"
+                },
+                {
+                  "id": "B",
+                  "text": "153–159"
+                },
+                {
+                  "id": "C",
+                  "text": "140–152"
+                }
               ],
               "answer": "C",
               "explanation": "140–152 是 Grade C，CEFR 为 B1。153–159 是 Grade B，仍是 B1。160–170 是 Grade A，证书会注明表现出 B2 能力。"
@@ -67,9 +103,18 @@
               "type": "single",
               "prompt": "B1 Preliminary 和 B1 Preliminary for Schools 的关系，哪一句符合剑桥公开说明？",
               "options": [
-                {"id": "A", "text": "for Schools 更难，证书也不同。"},
-                {"id": "B", "text": "两者级别和形式相同；for Schools 的内容面向在校学习者，标准版面向成人。通过后是同一类证书。"},
-                {"id": "C", "text": "只有标准版考口语。"}
+                {
+                  "id": "A",
+                  "text": "for Schools 更难，证书也不同。"
+                },
+                {
+                  "id": "B",
+                  "text": "两者级别和形式相同；for Schools 的内容面向在校学习者，标准版面向成人。通过后是同一类证书。"
+                },
+                {
+                  "id": "C",
+                  "text": "只有标准版考口语。"
+                }
               ],
               "answer": "B",
               "explanation": "资格主页和考生手册都说明：CEFR 级别和考试形式相同，话题和情境不同。for Schools 贴合在校学习者的兴趣和经历，标准版面向成人。证书是同一类。"
@@ -79,9 +124,18 @@
               "type": "single",
               "prompt": "阅读或听力里，答错会倒扣分吗？",
               "options": [
-                {"id": "A", "text": "会，每错一题扣一分。"},
-                {"id": "B", "text": "不会。答对得 1 分，答错或不答都是 0 分。"},
-                {"id": "C", "text": "只有听力倒扣。"}
+                {
+                  "id": "A",
+                  "text": "会，每错一题扣一分。"
+                },
+                {
+                  "id": "B",
+                  "text": "不会。答对得 1 分，答错或不答都是 0 分。"
+                },
+                {
+                  "id": "C",
+                  "text": "只有听力倒扣。"
+                }
               ],
               "answer": "B",
               "explanation": "考生手册写明没有倒扣。没把握时也应该选一个答案，不要留空。"
@@ -100,16 +154,25 @@
         {
           "id": "r1",
           "title": "Part 1 风格：短文主旨",
-          "intro": "真实考试有 5 则短文，每题 3 个选项。下面是 2 则自编短文。先读完全文，再看选项，不要只抓一个相同的词。",
+          "intro": "真实考试有 5 则短文，每题 3 个选项。先看例题里答案为什么对，再做下面 5 则。做题时不要提前翻解析。",
           "questions": [
             {
               "id": "r1a",
               "type": "single",
               "prompt": "告示：City pool. Adult swimming: Tuesday and Thursday, 7 pm. Children's class: Saturday 10 am. The pool closes at 8 pm on weekdays. 这则告示告诉成人什么？",
               "options": [
-                {"id": "A", "text": "成人可以在周六上午游泳。"},
-                {"id": "B", "text": "成人场在两个工作日的晚上。"},
-                {"id": "C", "text": "泳池周六一直开到晚上 8 点。"}
+                {
+                  "id": "A",
+                  "text": "成人可以在周六上午游泳。"
+                },
+                {
+                  "id": "B",
+                  "text": "成人场在两个工作日的晚上。"
+                },
+                {
+                  "id": "C",
+                  "text": "泳池周六一直开到晚上 8 点。"
+                }
               ],
               "answer": "B",
               "explanation": "成人场是周二和周四晚上 7 点。周六上午是儿童班。晚上 8 点关门只写了 weekdays，不能推出周六也开到 8 点。"
@@ -119,29 +182,115 @@
               "type": "single",
               "prompt": "短信：Hi Nora, the museum tickets for 2 pm are sold out. I bought tickets for 4:30. Let's meet in the café inside, not at the bus stop. I may arrive ten minutes late. — Ben. Ben 主要是在说什么？",
               "options": [
-                {"id": "A", "text": "他要 Nora 自己去买下午 2 点的票。"},
-                {"id": "B", "text": "他们改看更晚的场次，见面地点在馆内咖啡馆，Ben 可能会晚到。"},
-                {"id": "C", "text": "他们仍在公交车站见面，时间是下午 2 点。"}
+                {
+                  "id": "A",
+                  "text": "他要 Nora 自己去买下午 2 点的票。"
+                },
+                {
+                  "id": "B",
+                  "text": "他们改看更晚的场次，见面地点在馆内咖啡馆，Ben 可能会晚到。"
+                },
+                {
+                  "id": "C",
+                  "text": "他们仍在公交车站见面，时间是下午 2 点。"
+                }
               ],
               "answer": "B",
               "explanation": "2 点的票已售完，Ben 买了 4:30。见面地点是 inside the café，不是 bus stop。may arrive ten minutes late 说明他可能不准时。"
+            },
+            {
+              "id": "r1c",
+              "type": "single",
+              "prompt": "告示：River Cafe. Breakfast 8–11 am every day. Lunch ends at 3 pm. We are closed on Mondays. 关于周一，告示在说什么？",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "周一中午可以吃午餐。"
+                },
+                {
+                  "id": "B",
+                  "text": "这家咖啡馆周一不营业。"
+                },
+                {
+                  "id": "C",
+                  "text": "周一只供应早餐。"
+                }
+              ],
+              "answer": "B",
+              "explanation": "We are closed on Mondays 指整家店周一关门。不能从 breakfast every day 推出周一仍开门，因为后面的 closed 把周一排除了。"
+            },
+            {
+              "id": "r1d",
+              "type": "single",
+              "prompt": "短信：Hi Sam, the coach to the museum leaves at 8:15, not 8:50. Bring a coat. Tickets are already paid. Don't wait at the school gate — we'll meet at the bus station. — Ms Lee. Ms Lee 要 Sam 怎么做？",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "自己买票，并在校门口等到 8:50。"
+                },
+                {
+                  "id": "B",
+                  "text": "坐更早的车，在汽车站见面，票已经付过。"
+                },
+                {
+                  "id": "C",
+                  "text": "在校门口上车，票还没买。"
+                }
+              ],
+              "answer": "B",
+              "explanation": "8:50 被 not 否定。Don't wait at the school gate，见面地点是 bus station。Tickets are already paid，所以不是让 Sam 买票。"
+            },
+            {
+              "id": "r1e",
+              "type": "single",
+              "prompt": "邮件：Your table for Friday at 7 has been moved to 7:45 because a large group booked the earlier time. Please reply if you cannot come. The restaurant is on Hill Street, next to the cinema. 餐厅在告诉顾客什么？",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "预订取消了，需要改到另一天。"
+                },
+                {
+                  "id": "B",
+                  "text": "同一天的座位改晚了；如果不能来，要回复。"
+                },
+                {
+                  "id": "C",
+                  "text": "餐厅搬到了电影院里面。"
+                }
+              ],
+              "answer": "B",
+              "explanation": "moved to 7:45 仍是 Friday。next to the cinema 是位置，不是餐厅搬进电影院。Please reply if you cannot come 是条件，不是已经取消。"
             }
-          ]
+          ],
+          "example": {
+            "prompt": "告示：Library computers. Free for members. Reserve a computer at the desk by 4 pm. Printing costs 10p a page. 问：这则告示要会员做什么？ A. 不用预约，谁都能用。 B. 在下午 4 点前到服务台预约电脑。 C. 会员打印免费。",
+            "answer": "B",
+            "why": "Free for members 只说明用电脑免费。预约仍然必要。Printing costs 10p 说明打印不免费。相同的词 free 不能直接选 C。"
+          }
         },
         {
           "id": "r2",
           "title": "Part 2 风格：人物与短文配对",
-          "intro": "真实考试是 5 个人对 8 则短文。这里缩短为 3 个人、5 则课程，用来练“每个条件都要满足”。课程可以不用完。",
-          "text": "A. Sunday Kitchen. Learn five easy vegetable recipes. Sundays 9:30–11:30 for four weeks. £25.\nB. City FC football. Saturdays 8 am. You should already play in a team.\nC. Photo Basics. Three short online lessons, then one two-hour meeting in the city centre.\nD. Evening Yoga. Mondays and Wednesdays at 7 pm. No experience needed. No competition.\nE. Advanced pastry. Sunday mornings. £120. For people who can already bake bread and cakes.",
+          "intro": "真实考试是 5 个人对 8 则短文。这一组就是 5 个人、8 则课程。每则最多用一次，三个条件都要满足。",
+          "text": "A. Sunday Kitchen. Learn five easy vegetable recipes. Sundays 9:30–11:30 for four weeks. £25.\nB. City FC football. Saturdays 8 am. You should already play in a team.\nC. Photo Basics. Three short online lessons, then one two-hour meeting in the city centre.\nD. Evening Yoga. Mondays and Wednesdays at 7 pm. No experience needed. No competition.\nE. Advanced pastry. Sunday mornings. £120. For people who can already bake bread and cakes.\nF. Saturday Pottery. 2–4 pm. Make a bowl. Materials included. No experience needed.\nG. Conversation Club. Groups of six. This month: holidays and transport. Wednesday 6:30 pm.\nH. Sunday Running. 7 am in the park. 8 km. You should already run for 30 minutes.",
           "questions": [
             {
               "id": "r2a",
               "type": "single",
               "prompt": "Anna 只能周日上午来，想学做简单健康的饭，不想花很多钱。哪一门最合适？",
               "options": [
-                {"id": "A", "text": "A Sunday Kitchen"},
-                {"id": "B", "text": "E Advanced pastry"},
-                {"id": "C", "text": "D Evening Yoga"}
+                {
+                  "id": "A",
+                  "text": "A Sunday Kitchen"
+                },
+                {
+                  "id": "B",
+                  "text": "E Advanced pastry"
+                },
+                {
+                  "id": "C",
+                  "text": "D Evening Yoga"
+                }
               ],
               "answer": "A",
               "explanation": "A 是周日上午、蔬菜食谱、只要 £25。E 也在周日上午，但 £120 而且要求已经会做面包和蛋糕，不符合“便宜、简单”。"
@@ -151,9 +300,18 @@
               "type": "single",
               "prompt": "Ben 经常出差，希望先在网上学，再和老师见一次面。他想学摄影。哪一门最合适？",
               "options": [
-                {"id": "A", "text": "B City FC football"},
-                {"id": "B", "text": "C Photo Basics"},
-                {"id": "C", "text": "A Sunday Kitchen"}
+                {
+                  "id": "A",
+                  "text": "B City FC football"
+                },
+                {
+                  "id": "B",
+                  "text": "C Photo Basics"
+                },
+                {
+                  "id": "C",
+                  "text": "A Sunday Kitchen"
+                }
               ],
               "answer": "B",
               "explanation": "只有 C 同时满足 photography、online lessons 和一次线下见面。"
@@ -163,12 +321,63 @@
               "type": "single",
               "prompt": "Chen 想在晚上下班后锻炼。他不喜欢团体球类，也没有经验。哪一门最合适？",
               "options": [
-                {"id": "A", "text": "B City FC football"},
-                {"id": "B", "text": "D Evening Yoga"},
-                {"id": "C", "text": "E Advanced pastry"}
+                {
+                  "id": "A",
+                  "text": "B City FC football"
+                },
+                {
+                  "id": "B",
+                  "text": "D Evening Yoga"
+                },
+                {
+                  "id": "C",
+                  "text": "E Advanced pastry"
+                }
               ],
               "answer": "B",
               "explanation": "D 是晚上、不需要经验、也不比赛。B 是周六早上的足球，而且要求已经在队里踢球。"
+            },
+            {
+              "id": "r2d",
+              "type": "single",
+              "prompt": "Dina 想在工作日晚上用小组练口语，话题最好和旅行有关。哪一门最合适？",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "G Conversation Club"
+                },
+                {
+                  "id": "B",
+                  "text": "H Sunday Running"
+                },
+                {
+                  "id": "C",
+                  "text": "F Saturday Pottery"
+                }
+              ],
+              "answer": "A",
+              "explanation": "G 是六人小组、周三晚上，这个月谈 holidays and transport。H 是周日清晨跑步，F 是周六手作，都不是口语旅行话题。"
+            },
+            {
+              "id": "r2e",
+              "type": "single",
+              "prompt": "Omar 周六下午有空，想亲手做一件东西，而且没有经验。哪一门最合适？",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "F Saturday Pottery"
+                },
+                {
+                  "id": "B",
+                  "text": "B City FC football"
+                },
+                {
+                  "id": "C",
+                  "text": "H Sunday Running"
+                }
+              ],
+              "answer": "A",
+              "explanation": "F 是周六 2–4 点、做碗、材料包含、不需要经验。B 要求已经会踢球，H 是周日清晨而且要求能跑 30 分钟。"
             }
           ]
         },
@@ -183,10 +392,22 @@
               "type": "single",
               "prompt": "作者一开始感到累，是因为什么？",
               "options": [
-                {"id": "A", "text": "工作本身特别难。"},
-                {"id": "B", "text": "早上班车路程很长。"},
-                {"id": "C", "text": "她上班前先骑了很久的车。"},
-                {"id": "D", "text": "她为了躲车流很早出门。"}
+                {
+                  "id": "A",
+                  "text": "工作本身特别难。"
+                },
+                {
+                  "id": "B",
+                  "text": "早上班车路程很长。"
+                },
+                {
+                  "id": "C",
+                  "text": "她上班前先骑了很久的车。"
+                },
+                {
+                  "id": "D",
+                  "text": "她为了躲车流很早出门。"
+                }
               ],
               "answer": "B",
               "explanation": "开头的累来自 almost an hour on the bus。更早出门是后来骑车时才做的事，D 把后面的细节安到了开头。"
@@ -196,13 +417,133 @@
               "type": "single",
               "prompt": "路程变快之前，作者做了什么？",
               "options": [
-                {"id": "A", "text": "向同事借自行车骑了一周。"},
-                {"id": "B", "text": "买了一辆新自行车。"},
-                {"id": "C", "text": "从此再也不坐公交。"},
-                {"id": "D", "text": "参加了一场自行车比赛。"}
+                {
+                  "id": "A",
+                  "text": "向同事借自行车骑了一周。"
+                },
+                {
+                  "id": "B",
+                  "text": "买了一辆新自行车。"
+                },
+                {
+                  "id": "C",
+                  "text": "从此再也不坐公交。"
+                },
+                {
+                  "id": "D",
+                  "text": "参加了一场自行车比赛。"
+                }
               ],
               "answer": "A",
               "explanation": "文中是 borrow her bike for a week，没有写买车。下大雨仍坐公交，所以 C 错。do not race 否定了 D。"
+            }
+          ]
+        },
+        {
+          "id": "r3long",
+          "title": "Part 3 加长篇：按段落找依据",
+          "intro": "这是另一篇自编文章，不是上面那篇通勤短文。前几题按顺序，最后一题看尚未决定的事。",
+          "text": "Maya started a food blog last January because her friends always asked for the same recipes. She did not expect many readers. In March a local newspaper put a link on its website, and the number of visitors grew quickly. Maya still cooks in her small flat. She refuses to buy an expensive camera. \"Daylight from the kitchen window is enough,\" she says. The difficult part is not cooking. It is answering messages every night. Last week she turned her phone off at nine o'clock and finished a chapter of her cookery course. She has not decided whether to leave her weekend job at the market. The blog does not pay her yet.",
+          "questions": [
+            {
+              "id": "r3c",
+              "type": "single",
+              "prompt": "Maya 一月开始写博客，是因为什么？",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "当地报纸请她写专栏。"
+                },
+                {
+                  "id": "B",
+                  "text": "朋友总是向她要同样的菜谱。"
+                },
+                {
+                  "id": "C",
+                  "text": "她想辞掉周末的市场工作。"
+                },
+                {
+                  "id": "D",
+                  "text": "她买了一台很贵的相机。"
+                }
+              ],
+              "answer": "B",
+              "explanation": "第一句 because her friends always asked for the same recipes。报纸链接出现在三月，是后来的事。她还没决定是否辞掉市场工作。"
+            },
+            {
+              "id": "r3d",
+              "type": "single",
+              "prompt": "什么让更多人看到了博客？",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "她在市场上发传单。"
+                },
+                {
+                  "id": "B",
+                  "text": "一家当地报纸在网站上放了链接。"
+                },
+                {
+                  "id": "C",
+                  "text": "她的烹饪课程要求同学阅读。"
+                },
+                {
+                  "id": "D",
+                  "text": "她每天晚上回复所有消息。"
+                }
+              ],
+              "answer": "B",
+              "explanation": "In March a local newspaper put a link on its website, and the number of visitors grew quickly. 回复消息是后来她觉得困难的事，不是访客增加的原因。"
+            },
+            {
+              "id": "r3e",
+              "type": "single",
+              "prompt": "关于拍照设备，Maya 的看法是什么？",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "必须买一台贵相机。"
+                },
+                {
+                  "id": "B",
+                  "text": "厨房窗户的自然光就够了。"
+                },
+                {
+                  "id": "C",
+                  "text": "她只在市场里拍照。"
+                },
+                {
+                  "id": "D",
+                  "text": "报纸会借给她相机。"
+                }
+              ],
+              "answer": "B",
+              "explanation": "She refuses to buy an expensive camera. 引号里的话是 Daylight from the kitchen window is enough."
+            },
+            {
+              "id": "r3f",
+              "type": "single",
+              "prompt": "文章结束时，哪一件事仍未决定？",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "博客是否已经有很多读者。"
+                },
+                {
+                  "id": "B",
+                  "text": "她是否辞去周末在市场的工作。"
+                },
+                {
+                  "id": "C",
+                  "text": "烹饪课程是否已经上完。"
+                },
+                {
+                  "id": "D",
+                  "text": "报纸是否会继续放链接。"
+                }
+              ],
+              "answer": "B",
+              "explanation": "She has not decided whether to leave her weekend job at the market. 博客还不付钱，这是背景，不是那句 has not decided 的对象。课程只说上完了一章。"
             }
           ]
         },
@@ -217,10 +558,22 @@
               "type": "single",
               "prompt": "空 (1) 应填哪一句？",
               "options": [
-                {"id": "A", "text": "I was sure I had put it in my bag at lunchtime."},
-                {"id": "B", "text": "He asked me what colour it was."},
-                {"id": "C", "text": "So I bought a new notebook on the way home."},
-                {"id": "D", "text": "The bus was late that afternoon."}
+                {
+                  "id": "A",
+                  "text": "I was sure I had put it in my bag at lunchtime."
+                },
+                {
+                  "id": "B",
+                  "text": "He asked me what colour it was."
+                },
+                {
+                  "id": "C",
+                  "text": "So I bought a new notebook on the way home."
+                },
+                {
+                  "id": "D",
+                  "text": "The bus was late that afternoon."
+                }
               ],
               "answer": "A",
               "explanation": "下一句是在椅子下和外套里找，说明他以为本子本来在自己包里。C 和后文“在架子上找到”矛盾。D 和找本子无关。"
@@ -230,10 +583,22 @@
               "type": "single",
               "prompt": "空 (2) 应填哪一句？",
               "options": [
-                {"id": "A", "text": "I was sure I had put it in my bag at lunchtime."},
-                {"id": "B", "text": "He asked me what colour it was."},
-                {"id": "C", "text": "So I bought a new notebook on the way home."},
-                {"id": "D", "text": "The bus was late that afternoon."}
+                {
+                  "id": "A",
+                  "text": "I was sure I had put it in my bag at lunchtime."
+                },
+                {
+                  "id": "B",
+                  "text": "He asked me what colour it was."
+                },
+                {
+                  "id": "C",
+                  "text": "So I bought a new notebook on the way home."
+                },
+                {
+                  "id": "D",
+                  "text": "The bus was late that afternoon."
+                }
               ],
               "answer": "B",
               "explanation": "老师还在教室里，下一句是 He then said。先问颜色，再告诉他有人捡到蓝色本子，才能接上“我的本子是红色”。"
@@ -251,10 +616,22 @@
               "type": "single",
               "prompt": "空 (1)",
               "options": [
-                {"id": "A", "text": "meet"},
-                {"id": "B", "text": "know"},
-                {"id": "C", "text": "look"},
-                {"id": "D", "text": "become"}
+                {
+                  "id": "A",
+                  "text": "meet"
+                },
+                {
+                  "id": "B",
+                  "text": "know"
+                },
+                {
+                  "id": "C",
+                  "text": "look"
+                },
+                {
+                  "id": "D",
+                  "text": "become"
+                }
               ],
               "answer": "A",
               "explanation": "meet friends 是固定搭配。look 后面不能直接接 friends。"
@@ -264,10 +641,22 @@
               "type": "single",
               "prompt": "空 (2)：阿姨认识市场上的许多什么人？",
               "options": [
-                {"id": "A", "text": "customers"},
-                {"id": "B", "text": "sellers"},
-                {"id": "C", "text": "passengers"},
-                {"id": "D", "text": "teachers"}
+                {
+                  "id": "A",
+                  "text": "customers"
+                },
+                {
+                  "id": "B",
+                  "text": "sellers"
+                },
+                {
+                  "id": "C",
+                  "text": "passengers"
+                },
+                {
+                  "id": "D",
+                  "text": "teachers"
+                }
               ],
               "answer": "B",
               "explanation": "她们是去买东西的，阿姨认识的是卖东西的人 sellers。customers 是别的顾客，文中没有这个信息。"
@@ -277,10 +666,22 @@
               "type": "single",
               "prompt": "空 (3)",
               "options": [
-                {"id": "A", "text": "fruit"},
-                {"id": "B", "text": "tickets"},
-                {"id": "C", "text": "weather"},
-                {"id": "D", "text": "noise"}
+                {
+                  "id": "A",
+                  "text": "fruit"
+                },
+                {
+                  "id": "B",
+                  "text": "tickets"
+                },
+                {
+                  "id": "C",
+                  "text": "weather"
+                },
+                {
+                  "id": "D",
+                  "text": "noise"
+                }
               ],
               "answer": "A",
               "explanation": "草莓卖完了，所以买了别的水果。some other fruit 里 fruit 可以不可数。"
@@ -297,21 +698,27 @@
               "id": "r6a",
               "type": "text",
               "prompt": "空 (1) 写一个词。",
-              "accept": ["to"],
+              "accept": [
+                "to"
+              ],
               "explanation": "want to do something。这里 to 是不定式符号，不能写成 for。"
             },
             {
               "id": "r6b",
               "type": "text",
               "prompt": "空 (2) 写一个词。",
-              "accept": ["who"],
+              "accept": [
+                "who"
+              ],
               "explanation": "My brother 是人，非限制性定语从句用 who。which 用来指物。"
             },
             {
               "id": "r6c",
               "type": "text",
               "prompt": "空 (3) 写一个词。",
-              "accept": ["been"],
+              "accept": [
+                "been"
+              ],
               "explanation": "have been practising 是现在完成进行时。for three weeks 表示这段练习一直持续到现在。"
             }
           ]
@@ -335,9 +742,18 @@
               "type": "single",
               "prompt": "写作 Part 1 的邮件通常要覆盖几个内容要点？",
               "options": [
-                {"id": "A", "text": "2 个"},
-                {"id": "B", "text": "4 个"},
-                {"id": "C", "text": "6 个"}
+                {
+                  "id": "A",
+                  "text": "2 个"
+                },
+                {
+                  "id": "B",
+                  "text": "4 个"
+                },
+                {
+                  "id": "C",
+                  "text": "6 个"
+                }
               ],
               "answer": "B",
               "explanation": "教师手册说明：题目会给出情境和四个内容要点，约 100 词的回复里都要写到。"
@@ -347,9 +763,18 @@
               "type": "single",
               "prompt": "Part 2 让你选什么？",
               "options": [
-                {"id": "A", "text": "一篇文章或一个故事"},
-                {"id": "B", "text": "一封正式投诉信或一份报告"},
-                {"id": "C", "text": "两篇都必须写"}
+                {
+                  "id": "A",
+                  "text": "一篇文章或一个故事"
+                },
+                {
+                  "id": "B",
+                  "text": "一封正式投诉信或一份报告"
+                },
+                {
+                  "id": "C",
+                  "text": "两篇都必须写"
+                }
               ],
               "answer": "A",
               "explanation": "Part 2 是二选一：article 或 story，大约 100 词。不要两篇都写。"
@@ -359,9 +784,18 @@
               "type": "single",
               "prompt": "每一道写作题的原始最高分是多少？",
               "options": [
-                {"id": "A", "text": "5 分"},
-                {"id": "B", "text": "20 分"},
-                {"id": "C", "text": "32 分"}
+                {
+                  "id": "A",
+                  "text": "5 分"
+                },
+                {
+                  "id": "B",
+                  "text": "20 分"
+                },
+                {
+                  "id": "C",
+                  "text": "32 分"
+                }
               ],
               "answer": "B",
               "explanation": "每题四个评分维度各 0–5 分，合计最高 20 分。两题共 40 分原始分，再换算进总分。本站没有官方换算表，不要自己发明量表分。"
@@ -371,9 +805,18 @@
               "type": "single",
               "prompt": "机考写作有自动拼写检查吗？",
               "options": [
-                {"id": "A", "text": "有，和普通文档一样。"},
-                {"id": "B", "text": "没有。考生手册说明要自己检查拼写。"},
-                {"id": "C", "text": "只有 Part 2 有。"}
+                {
+                  "id": "A",
+                  "text": "有，和普通文档一样。"
+                },
+                {
+                  "id": "B",
+                  "text": "没有。考生手册说明要自己检查拼写。"
+                },
+                {
+                  "id": "C",
+                  "text": "只有 Part 2 有。"
+                }
               ],
               "answer": "B",
               "explanation": "机考会显示词数，但没有拼写检查。纸笔写作用钢笔，不是铅笔。"
@@ -383,9 +826,18 @@
               "type": "single",
               "prompt": "四个评分维度里，哪一项主要看衔接和篇章是否清楚？",
               "options": [
-                {"id": "A", "text": "Content"},
-                {"id": "B", "text": "Organisation"},
-                {"id": "C", "text": "Language"}
+                {
+                  "id": "A",
+                  "text": "Content"
+                },
+                {
+                  "id": "B",
+                  "text": "Organisation"
+                },
+                {
+                  "id": "C",
+                  "text": "Language"
+                }
               ],
               "answer": "B",
               "explanation": "Content 看是否写全、是否切题。Organisation 看连接和条理。Language 看词汇和语法。Communicative Achievement 看文体是否适合目标读者。"
@@ -395,8 +847,14 @@
               "type": "single",
               "prompt": "朋友的四个批注是：答应周六下午去；建议地点；说明你带什么食物；询问回家时间。哪一封回复漏了要点？",
               "options": [
-                {"id": "A", "text": "Saturday afternoon is better because I work in the morning. Let's meet in the park. I can bring fruit. What time do you want to go home?"},
-                {"id": "B", "text": "Saturday afternoon is better because I work in the morning. Let's meet in the park. I can bring fruit. The park is near my house."}
+                {
+                  "id": "A",
+                  "text": "Saturday afternoon is better because I work in the morning. Let's meet in the park. I can bring fruit. What time do you want to go home?"
+                },
+                {
+                  "id": "B",
+                  "text": "Saturday afternoon is better because I work in the morning. Let's meet in the park. I can bring fruit. The park is near my house."
+                }
               ],
               "answer": "B",
               "explanation": "B 没有询问回家时间，第四个要点缺失，Content 会受影响。多写“公园离我家近”不能代替这个提问。"
@@ -423,9 +881,18 @@
               "type": "single",
               "prompt": "这位女士周六打算做什么？",
               "options": [
-                {"id": "A", "text": "去现场看整场比赛。"},
-                {"id": "B", "text": "留在家里见亲戚。"},
-                {"id": "C", "text": "周六看比赛集锦。"}
+                {
+                  "id": "A",
+                  "text": "去现场看整场比赛。"
+                },
+                {
+                  "id": "B",
+                  "text": "留在家里见亲戚。"
+                },
+                {
+                  "id": "C",
+                  "text": "周六看比赛集锦。"
+                }
               ],
               "answer": "B",
               "explanation": "她提到比赛，也说周日可以看 highlights。问的是周六：cousin is visiting，所以她留在家里。听到 match 就选看比赛，是这道题的干扰。"
@@ -442,21 +909,35 @@
               "id": "l2a",
               "type": "text",
               "prompt": "天气好时在哪里见面？写 station entrance 或 the station entrance。",
-              "accept": ["station entrance", "the station entrance", "at the station entrance"],
+              "accept": [
+                "station entrance",
+                "the station entrance",
+                "at the station entrance"
+              ],
               "explanation": "录音说 meet at the station entrance, not the ticket office。售票处是干扰项。"
             },
             {
               "id": "l2b",
               "type": "text",
               "prompt": "他们几点出发？可写 9:30 或 half past nine。",
-              "accept": ["9:30", "9.30", "09:30", "half past nine"],
+              "accept": [
+                "9:30",
+                "9.30",
+                "09:30",
+                "half past nine"
+              ],
               "explanation": "half past nine 就是 9:30。真实考试里，拼写大体能认出即可；如果是逐字母拼出的姓名，则必须完全正确。"
             },
             {
               "id": "l2c",
               "type": "text",
               "prompt": "如果下雨，改在哪里见面？",
-              "accept": ["library", "the library", "the library next door", "library next door"],
+              "accept": [
+                "library",
+                "the library",
+                "the library next door",
+                "library next door"
+              ],
               "explanation": "If it rains, we will meet in the library next door instead."
             }
           ]
@@ -472,9 +953,18 @@
               "type": "single",
               "prompt": "Maya 为什么开始教烹饪？",
               "options": [
-                {"id": "A", "text": "因为报酬很高。"},
-                {"id": "B", "text": "因为她发现自己喜欢讲解食谱。"},
-                {"id": "C", "text": "因为她不想再给家里做饭。"}
+                {
+                  "id": "A",
+                  "text": "因为报酬很高。"
+                },
+                {
+                  "id": "B",
+                  "text": "因为她发现自己喜欢讲解食谱。"
+                },
+                {
+                  "id": "C",
+                  "text": "因为她不想再给家里做饭。"
+                }
               ],
               "answer": "B",
               "explanation": "她明确说 It was not because of the money。used to cook for my family 是过去的习惯，不是停止给家里做饭的原因。"
@@ -484,12 +974,63 @@
               "type": "single",
               "prompt": "新学员第一节课前应该做什么？",
               "options": [
-                {"id": "A", "text": "买一套昂贵的刀。"},
-                {"id": "B", "text": "阅读她发来的安全说明。"},
-                {"id": "C", "text": "先在学校活动里帮忙。"}
+                {
+                  "id": "A",
+                  "text": "买一套昂贵的刀。"
+                },
+                {
+                  "id": "B",
+                  "text": "阅读她发来的安全说明。"
+                },
+                {
+                  "id": "C",
+                  "text": "先在学校活动里帮忙。"
+                }
               ],
               "answer": "B",
               "explanation": "Read the safety message。expensive knives 出现了，但是 do not need to buy。"
+            }
+          ]
+        },
+        {
+          "id": "l4",
+          "title": "另一段通知",
+          "intro": "先播放，再填。车站和 10:30 都会被提到，但它们不是出发地点或出发时间。",
+          "audioScript": "This is a message for people joining the Saturday city walk. The walk starts at quarter past ten outside the library, not the station. It lasts about ninety minutes. Please wear comfortable shoes. If you are late, call Maria. We will not wait after half past ten.",
+          "questions": [
+            {
+              "id": "l4a",
+              "type": "text",
+              "prompt": "集合地点在哪里？",
+              "accept": [
+                "library",
+                "the library",
+                "outside the library"
+              ],
+              "explanation": "outside the library, not the station。station 被否定了。"
+            },
+            {
+              "id": "l4b",
+              "type": "text",
+              "prompt": "几点开始？可写 10:15 或 quarter past ten。",
+              "accept": [
+                "10:15",
+                "10.15",
+                "quarter past ten"
+              ],
+              "explanation": "quarter past ten 是 10:15。half past ten 是不再等候的时间，不是开始时间。"
+            },
+            {
+              "id": "l4c",
+              "type": "text",
+              "prompt": "活动大约持续多久？",
+              "accept": [
+                "90 minutes",
+                "ninety minutes",
+                "about ninety minutes",
+                "about 90 minutes"
+              ],
+              "explanation": "It lasts about ninety minutes."
             }
           ]
         }
@@ -512,9 +1053,18 @@
               "type": "single",
               "prompt": "Part 2 里，每位考生描述一张照片大约说多久？",
               "options": [
-                {"id": "A", "text": "大约 1 分钟"},
-                {"id": "B", "text": "大约 4 分钟"},
-                {"id": "C", "text": "大约 10 分钟"}
+                {
+                  "id": "A",
+                  "text": "大约 1 分钟"
+                },
+                {
+                  "id": "B",
+                  "text": "大约 4 分钟"
+                },
+                {
+                  "id": "C",
+                  "text": "大约 10 分钟"
+                }
               ],
               "answer": "A",
               "explanation": "形式页写明：每位考生描述一张彩色照片，大约说 1 分钟。整个 Part 2 大约 3 分钟。"
@@ -524,9 +1074,18 @@
               "type": "single",
               "prompt": "两名考生一起考，口语考试大约多久？",
               "options": [
-                {"id": "A", "text": "10–12 分钟"},
-                {"id": "B", "text": "45 分钟"},
-                {"id": "C", "text": "6 分钟"}
+                {
+                  "id": "A",
+                  "text": "10–12 分钟"
+                },
+                {
+                  "id": "B",
+                  "text": "45 分钟"
+                },
+                {
+                  "id": "C",
+                  "text": "6 分钟"
+                }
               ],
               "answer": "A",
               "explanation": "两人一组是 10–12 分钟。三人一组是 15–17 分钟，让每个人都有足够时间说。"
@@ -536,9 +1095,18 @@
               "type": "single",
               "prompt": "搭档英语比你好时，考官会怎么处理你的分数？",
               "options": [
-                {"id": "A", "text": "把你们互相比较，分给你俩的平均分。"},
-                {"id": "B", "text": "按你自己的表现评分，不和搭档比。"},
-                {"id": "C", "text": "只给说得更多的那个人分数。"}
+                {
+                  "id": "A",
+                  "text": "把你们互相比较，分给你俩的平均分。"
+                },
+                {
+                  "id": "B",
+                  "text": "按你自己的表现评分，不和搭档比。"
+                },
+                {
+                  "id": "C",
+                  "text": "只给说得更多的那个人分数。"
+                }
               ],
               "answer": "B",
               "explanation": "教师手册写明：全程按考生个人表现评分，不把两人互相比较。"
@@ -548,9 +1116,18 @@
               "type": "single",
               "prompt": "Part 3 主要要你做什么？",
               "options": [
-                {"id": "A", "text": "单独背一段准备好的自我介绍。"},
-                {"id": "B", "text": "根据图片一起提建议、讨论选择并尽量达成一致。"},
-                {"id": "C", "text": "听一段录音并填空。"}
+                {
+                  "id": "A",
+                  "text": "单独背一段准备好的自我介绍。"
+                },
+                {
+                  "id": "B",
+                  "text": "根据图片一起提建议、讨论选择并尽量达成一致。"
+                },
+                {
+                  "id": "C",
+                  "text": "听一段录音并填空。"
+                }
               ],
               "answer": "B",
               "explanation": "Part 3 是协作任务：make and respond to suggestions, discuss alternatives, negotiate agreement。"
@@ -560,9 +1137,18 @@
               "type": "single",
               "prompt": "讨论中哪一种做法更符合 Interactive Communication 的高分表现？",
               "options": [
-                {"id": "A", "text": "一直自己说，不看搭档。"},
-                {"id": "B", "text": "提出想法后问 What do you think? 并回应搭档。"},
-                {"id": "C", "text": "不会说时就改谈一个完全无关的话题。"}
+                {
+                  "id": "A",
+                  "text": "一直自己说，不看搭档。"
+                },
+                {
+                  "id": "B",
+                  "text": "提出想法后问 What do you think? 并回应搭档。"
+                },
+                {
+                  "id": "C",
+                  "text": "不会说时就改谈一个完全无关的话题。"
+                }
               ],
               "answer": "B",
               "explanation": "互动分看你是否能发起、回应，并把谈话发展下去。完全换话题会伤害相关性和互动。"
@@ -587,14 +1173,18 @@
               "id": "g1a",
               "type": "text",
               "prompt": "She ____ Tom since primary school.（写 has known）",
-              "accept": ["has known"],
+              "accept": [
+                "has known"
+              ],
               "explanation": "since primary school 把一段时间连接到现在，用现在完成时。主语 She，所以是 has known，不是 have known，也不是 knows。"
             },
             {
               "id": "g1b",
               "type": "text",
               "prompt": "We ____ the homework last night.（写 finished）",
-              "accept": ["finished"],
+              "accept": [
+                "finished"
+              ],
               "explanation": "last night 是明确的过去时间，用一般过去时 finished，不用 have finished。"
             },
             {
@@ -602,9 +1192,18 @@
               "type": "single",
               "prompt": "She is ____ honest person.",
               "options": [
-                {"id": "A", "text": "a"},
-                {"id": "B", "text": "an"},
-                {"id": "C", "text": "the"}
+                {
+                  "id": "A",
+                  "text": "a"
+                },
+                {
+                  "id": "B",
+                  "text": "an"
+                },
+                {
+                  "id": "C",
+                  "text": "the"
+                }
               ],
               "answer": "B",
               "explanation": "honest 的 h 不发音，开头音素是元音，所以用 an。这里是第一次提到、没有特指，不用 the。"
@@ -613,28 +1212,38 @@
               "id": "g1d",
               "type": "text",
               "prompt": "If it rains tomorrow, we ____ at home.（写 will stay）",
-              "accept": ["will stay", "'ll stay"],
+              "accept": [
+                "will stay",
+                "'ll stay"
+              ],
               "explanation": "第一条件句：if + 现在时，主句用 will。不要写 if it will rain。"
             },
             {
               "id": "g1e",
               "type": "text",
               "prompt": "If I ____ his number, I would call him.（写 knew）",
-              "accept": ["knew"],
+              "accept": [
+                "knew"
+              ],
               "explanation": "第二条件句谈现在的假设。if 从句用过去时 knew，主句用 would。不要写 know 或 would know。"
             },
             {
               "id": "g1f",
               "type": "text",
               "prompt": "The window ____ yesterday.（写 was broken）",
-              "accept": ["was broken"],
+              "accept": [
+                "was broken"
+              ],
               "explanation": "昨天发生的被动：was/were + 过去分词。window 是单数，所以 was broken。"
             },
             {
               "id": "g1g",
               "type": "text",
               "prompt": "The woman ____ lives next door is a nurse.（写 who 或 that）",
-              "accept": ["who", "that"],
+              "accept": [
+                "who",
+                "that"
+              ],
               "explanation": "先行词是人，限制性定语从句可以用 who 或 that。which 指物。"
             },
             {
@@ -642,9 +1251,18 @@
               "type": "single",
               "prompt": "你想礼貌地建议朋友多睡觉。哪一句最合适？",
               "options": [
-                {"id": "A", "text": "You must sleep more."},
-                {"id": "B", "text": "You should sleep more."},
-                {"id": "C", "text": "You mustn't sleep more."}
+                {
+                  "id": "A",
+                  "text": "You must sleep more."
+                },
+                {
+                  "id": "B",
+                  "text": "You should sleep more."
+                },
+                {
+                  "id": "C",
+                  "text": "You mustn't sleep more."
+                }
               ],
               "answer": "B",
               "explanation": "should 表示建议。must 更像规定或强烈义务。mustn't 表示禁止，意思反了。"
@@ -653,14 +1271,18 @@
               "id": "g1i",
               "type": "text",
               "prompt": "This book is ____ than that one.（写 more interesting）",
-              "accept": ["more interesting"],
+              "accept": [
+                "more interesting"
+              ],
               "explanation": "多音节形容词用 more + 形容词 + than，不是 interestinger。"
             },
             {
               "id": "g1j",
               "type": "text",
               "prompt": "I enjoy ____.（写 cooking）",
-              "accept": ["cooking"],
+              "accept": [
+                "cooking"
+              ],
               "explanation": "enjoy 后面接动词 -ing。want、decide、hope 后面才常接 to do。"
             },
             {
@@ -668,9 +1290,18 @@
               "type": "single",
               "prompt": "The class starts ____ Monday.",
               "options": [
-                {"id": "A", "text": "in"},
-                {"id": "B", "text": "on"},
-                {"id": "C", "text": "at"}
+                {
+                  "id": "A",
+                  "text": "in"
+                },
+                {
+                  "id": "B",
+                  "text": "on"
+                },
+                {
+                  "id": "C",
+                  "text": "at"
+                }
               ],
               "answer": "B",
               "explanation": "星期几前面用 on。in 用于月份、年份和 morning/afternoon 的泛指；at 用于钟点。"
@@ -680,12 +1311,84 @@
               "type": "single",
               "prompt": "哪一句是正确的？",
               "options": [
-                {"id": "A", "text": "This soup is too hot to eat."},
-                {"id": "B", "text": "This soup is too hot to eating."},
-                {"id": "C", "text": "This soup is enough hot to eat."}
+                {
+                  "id": "A",
+                  "text": "This soup is too hot to eat."
+                },
+                {
+                  "id": "B",
+                  "text": "This soup is too hot to eating."
+                },
+                {
+                  "id": "C",
+                  "text": "This soup is enough hot to eat."
+                }
               ],
               "answer": "A",
               "explanation": "too + 形容词 + to do。enough 要放在形容词后面：hot enough，不是 enough hot。"
+            }
+          ]
+        },
+        {
+          "id": "g2",
+          "title": "在一封短信里填词",
+          "intro": "先读整段，再填空。每空只写要求的词。这是自编语境，不是阅读 Part 6 的真题。",
+          "text": "Hi Jo, I have lived in this city (1) March, but I have never (2) to the castle. If the weather (3) sunny on Sunday, we (4) take the bus. My brother, (5) studies history, can come with us. I am interested (6) old buildings.",
+          "questions": [
+            {
+              "id": "g2a",
+              "type": "text",
+              "prompt": "空 (1)。I have lived here ____ March.",
+              "accept": [
+                "since"
+              ],
+              "explanation": "since 接起点 March。for 后面要接一段时间，例如 for three months。"
+            },
+            {
+              "id": "g2b",
+              "type": "text",
+              "prompt": "空 (2)。I have never ____ to the castle.",
+              "accept": [
+                "been"
+              ],
+              "explanation": "have never been to 表示到现在为止没去过。不要写 went，因为前面已经有 have。"
+            },
+            {
+              "id": "g2c",
+              "type": "text",
+              "prompt": "空 (3)。If the weather ____ sunny on Sunday...",
+              "accept": [
+                "is"
+              ],
+              "explanation": "第一条件句的 if 从句用现在时 is，不用 will。"
+            },
+            {
+              "id": "g2d",
+              "type": "text",
+              "prompt": "空 (4)。we ____ take the bus.",
+              "accept": [
+                "will",
+                "'ll"
+              ],
+              "explanation": "主句用 will take。空里只写 will 或 'll。"
+            },
+            {
+              "id": "g2e",
+              "type": "text",
+              "prompt": "空 (5)。My brother, ____ studies history, ...",
+              "accept": [
+                "who"
+              ],
+              "explanation": "先行词是人，用 who。which 指物。"
+            },
+            {
+              "id": "g2f",
+              "type": "text",
+              "prompt": "空 (6)。interested ____ old buildings.",
+              "accept": [
+                "in"
+              ],
+              "explanation": "interested in 后面接名词或 -ing。不是 interested on，也不是 interested to old。"
             }
           ]
         }
@@ -708,9 +1411,18 @@
               "type": "single",
               "prompt": "八周计划是什么？",
               "options": [
-                {"id": "A", "text": "剑桥官方备考课表，所有考生都必须照做。"},
-                {"id": "B", "text": "为本教程写的示例，可以按自己的时间改。"},
-                {"id": "C", "text": "一份过去的考试试卷。"}
+                {
+                  "id": "A",
+                  "text": "剑桥官方备考课表，所有考生都必须照做。"
+                },
+                {
+                  "id": "B",
+                  "text": "为本教程写的示例，可以按自己的时间改。"
+                },
+                {
+                  "id": "C",
+                  "text": "一份过去的考试试卷。"
+                }
               ],
               "answer": "B",
               "explanation": "计划标题和正文都标明它是示例，不是官方课表，也不是试卷。"
@@ -720,9 +1432,18 @@
               "type": "single",
               "prompt": "这份示例假设学习者大约处于什么水平、每周学多久？",
               "options": [
-                {"id": "A", "text": "已经是 C1，每周 2 小时。"},
-                {"id": "B", "text": "大约 A2、正在走向 B1，每周约 8 小时。"},
-                {"id": "C", "text": "零基础，每周 40 小时。"}
+                {
+                  "id": "A",
+                  "text": "已经是 C1，每周 2 小时。"
+                },
+                {
+                  "id": "B",
+                  "text": "大约 A2、正在走向 B1，每周约 8 小时。"
+                },
+                {
+                  "id": "C",
+                  "text": "零基础，每周 40 小时。"
+                }
               ],
               "answer": "B",
               "explanation": "示例是给已有 A2、准备走向 B1 的学习者。8 小时只是例子，不是及格线。"
@@ -732,9 +1453,18 @@
               "type": "single",
               "prompt": "示例第 8 周让你重点做什么？",
               "options": [
-                {"id": "A", "text": "只背词汇表，不再做题。"},
-                {"id": "B", "text": "用官方样卷限时练习，并复习错题和考试当天的准备。"},
-                {"id": "C", "text": "开始学 C2 的语法。"}
+                {
+                  "id": "A",
+                  "text": "只背词汇表，不再做题。"
+                },
+                {
+                  "id": "B",
+                  "text": "用官方样卷限时练习，并复习错题和考试当天的准备。"
+                },
+                {
+                  "id": "C",
+                  "text": "开始学 C2 的语法。"
+                }
               ],
               "answer": "B",
               "explanation": "第 8 周回到完整的官方样卷和错题。词汇表不能代替四项技能。"
@@ -744,9 +1474,18 @@
               "type": "single",
               "prompt": "如果每周没有 8 小时，示例建议优先保住什么？",
               "options": [
-                {"id": "A", "text": "写作、口语和错题复习。"},
-                {"id": "B", "text": "只做最容易的阅读选择题。"},
-                {"id": "C", "text": "把全部时间用来抄单词，不写也不说。"}
+                {
+                  "id": "A",
+                  "text": "写作、口语和错题复习。"
+                },
+                {
+                  "id": "B",
+                  "text": "只做最容易的阅读选择题。"
+                },
+                {
+                  "id": "C",
+                  "text": "把全部时间用来抄单词，不写也不说。"
+                }
               ],
               "answer": "A",
               "explanation": "输入容易被拖着做，输出和订正更容易被丢掉。时间不够时，示例仍要求留下写作、口语和错题。"
@@ -772,9 +1511,18 @@
               "type": "single",
               "prompt": "整场 B1 Preliminary 有几份试卷，每份大约占总分的多少？",
               "options": [
-                {"id": "A", "text": "3 份，阅读和写作合在一起占 50%。"},
-                {"id": "B", "text": "4 份，每份 25%。"},
-                {"id": "C", "text": "5 份，口语占 40%。"}
+                {
+                  "id": "A",
+                  "text": "3 份，阅读和写作合在一起占 50%。"
+                },
+                {
+                  "id": "B",
+                  "text": "4 份，每份 25%。"
+                },
+                {
+                  "id": "C",
+                  "text": "5 份，口语占 40%。"
+                }
               ],
               "answer": "B",
               "explanation": "阅读、写作、听力、口语四份，各占 25%。总分是四项量表分的平均。"
@@ -784,9 +1532,18 @@
               "type": "single",
               "prompt": "听力录音每段放几遍？",
               "options": [
-                {"id": "A", "text": "一遍"},
-                {"id": "B", "text": "两遍"},
-                {"id": "C", "text": "可以自己暂停并重放"}
+                {
+                  "id": "A",
+                  "text": "一遍"
+                },
+                {
+                  "id": "B",
+                  "text": "两遍"
+                },
+                {
+                  "id": "C",
+                  "text": "可以自己暂停并重放"
+                }
               ],
               "answer": "B",
               "explanation": "每段听两遍。考生手册写明考试中不能暂停录音。"
@@ -796,9 +1553,18 @@
               "type": "single",
               "prompt": "故事题的第一句应该怎么处理？",
               "options": [
-                {"id": "A", "text": "必须使用题目给出的开头句，再往下写。"},
-                {"id": "B", "text": "可以改成自己更喜欢的开头。"},
-                {"id": "C", "text": "故事不需要开头，直接写对话。"}
+                {
+                  "id": "A",
+                  "text": "必须使用题目给出的开头句，再往下写。"
+                },
+                {
+                  "id": "B",
+                  "text": "可以改成自己更喜欢的开头。"
+                },
+                {
+                  "id": "C",
+                  "text": "故事不需要开头，直接写对话。"
+                }
               ],
               "answer": "A",
               "explanation": "Part 2 的故事会给 prompt sentence。要顺着它写，并注意里面的人名和代词。"
@@ -808,9 +1574,18 @@
               "type": "single",
               "prompt": "阅读 Part 6 每个空写几个词？",
               "options": [
-                {"id": "A", "text": "一个词"},
-                {"id": "B", "text": "一到三个词"},
-                {"id": "C", "text": "一个完整的句子"}
+                {
+                  "id": "A",
+                  "text": "一个词"
+                },
+                {
+                  "id": "B",
+                  "text": "一到三个词"
+                },
+                {
+                  "id": "C",
+                  "text": "一个完整的句子"
+                }
               ],
               "answer": "A",
               "explanation": "Part 6 是 open cloze，每空一个词。听力 Part 3 才常是一两个词、数字、日期或时间。"
@@ -820,9 +1595,18 @@
               "type": "single",
               "prompt": "Grade A（160–170）的证书说明什么？",
               "options": [
-                {"id": "A", "text": "这就是一张完整的 B2 First 证书。"},
-                {"id": "B", "text": "仍是 B1 Preliminary 证书，但注明表现出 B2 能力；它并不覆盖全部 B2 技能。"},
-                {"id": "C", "text": "分数超过 159 就没有证书。"}
+                {
+                  "id": "A",
+                  "text": "这就是一张完整的 B2 First 证书。"
+                },
+                {
+                  "id": "B",
+                  "text": "仍是 B1 Preliminary 证书，但注明表现出 B2 能力；它并不覆盖全部 B2 技能。"
+                },
+                {
+                  "id": "C",
+                  "text": "分数超过 159 就没有证书。"
+                }
               ],
               "answer": "B",
               "explanation": "成绩说明写得很清楚：Grade A 表明 B2 能力，但这项考试不是用来全面考核 B2 的。若要充分证明 B2，应准备 B2 First。"
@@ -831,7 +1615,9 @@
               "id": "c1f",
               "type": "text",
               "prompt": "She is interested ____ learning Chinese. 空里写一个词。",
-              "accept": ["in"],
+              "accept": [
+                "in"
+              ],
               "explanation": "interested in + 名词或 -ing。这是 B1 常见搭配，不是 interested on 或 interested to learning。"
             },
             {
@@ -839,9 +1625,18 @@
               "type": "single",
               "prompt": "口语 Part 1 主要谈什么？",
               "options": [
-                {"id": "A", "text": "个人情况和日常信息。"},
-                {"id": "B", "text": "描述一张照片约一分钟。"},
-                {"id": "C", "text": "和搭档讨论并做决定。"}
+                {
+                  "id": "A",
+                  "text": "个人情况和日常信息。"
+                },
+                {
+                  "id": "B",
+                  "text": "描述一张照片约一分钟。"
+                },
+                {
+                  "id": "C",
+                  "text": "和搭档讨论并做决定。"
+                }
               ],
               "answer": "A",
               "explanation": "Part 1 是和考官的短面试，给出事实或个人信息。照片是 Part 2，协作讨论是 Part 3。"
@@ -851,9 +1646,18 @@
               "type": "single",
               "prompt": "本站所有自动评分的练习应该被称作什么？",
               "options": [
-                {"id": "A", "text": "剑桥官方样卷"},
-                {"id": "B", "text": "非正式自编练习"},
-                {"id": "C", "text": "去年的真题"}
+                {
+                  "id": "A",
+                  "text": "剑桥官方样卷"
+                },
+                {
+                  "id": "B",
+                  "text": "非正式自编练习"
+                },
+                {
+                  "id": "C",
+                  "text": "去年的真题"
+                }
               ],
               "answer": "B",
               "explanation": "题目、文章和录音稿都是为本教程原创的。官方样卷只在剑桥备考页面，不能把本站分数当成考试分数。"
