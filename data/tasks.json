@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "note": "这些是原创任务，不是剑桥真题或官方样卷。写作和口语只做自评，不打考官分，也不做发音评分。",
+  "tasks": [
+    {
+      "id": "writing-email",
+      "skill": "writing",
+      "title": "写作：回复一封邮件",
+      "lessonId": "writing",
+      "targetWords": 100,
+      "instructions": "真实考试的 Part 1 是回复邮件，大约 100 词，并覆盖四个内容要点。下面先看一个短例，再写另一封全新的邮件。交卷前不会出现范文。",
+      "example": {
+        "prompt": "朋友问：周六下午去公园吗？你要回答：去，因为想散步；建议两点在东门见；你带水；问要不要带球。",
+        "answer": "Hi Sam, I can come on Saturday afternoon because I want a walk. Let's meet at the east gate at 2. I will bring water. Do you want me to bring a ball? See you then, Li."
+      },
+      "prompt": "读 Priya 的邮件和你的四条批注，写一封大约 100 词的回信。",
+      "stimulus": "Hi,\n\nCan you help at the school fair on Saturday? Morning or afternoon is fine. Which job would you like? Can you bring anything?\n\nPriya",
+      "notes": [
+        "答应。下午更好，因为上午有课。",
+        "建议在书摊帮忙。",
+        "你能带一些纸袋。",
+        "询问集市几点结束。"
+      ],
+      "placeholder": "在这里用英文写回信。可以先写 Hi Priya，再逐条回应四个批注。",
+      "rubric": [
+        {"id": "afternoon", "text": "我写了下午能去，并说明原因。", "hint": "要点要有选择和 because。"},
+        {"id": "job", "text": "我建议了具体工作，例如书摊。", "hint": "只写 I can help 还不够，要说出做什么。"},
+        {"id": "bags", "text": "我写了自己能带纸袋。", "hint": "用 I can bring。"},
+        {"id": "time", "text": "我问了集市几点结束。", "hint": "问句要有问号。"},
+        {"id": "email", "text": "这封信有问候和结尾，读起来像写给朋友。", "hint": "不要用 Dear Sir 配口语缩写。"}
+      ],
+      "model": "Hi Priya,\n\nThanks for your email. I can help at the school fair on Saturday.\n\nThe afternoon is better for me because I have a class in the morning. I would like to work at the book stall, so I can talk to people about the books.\n\nI can bring some paper bags for the customers. Do you need anything else?\n\nWhat time does the fair end? I need to catch the bus at 5 pm.\n\nSee you on Saturday!\n\nLi Wei"
+    },
+    {
+      "id": "writing-story",
+      "skill": "writing",
+      "title": "写作：按给定首句写故事",
+      "lessonId": "writing",
+      "targetWords": 100,
+      "instructions": "真实考试的 Part 2 可以选故事。题目会给第一句，你必须接着写，大约 100 词。主体用过去时。这是另一道自编题，不是教程里的范文。",
+      "example": {
+        "prompt": "首句：I opened my lunchbox and found a letter inside.",
+        "answer": "I opened my lunchbox and found a letter inside. It was from my sister. She wished me luck in the test. I smiled, ate my sandwich and felt much calmer."
+      },
+      "prompt": "用下面这句开头，写一个大约 100 词的故事。不要改首句里的人和动作。",
+      "stimulus": "The moment the train doors closed, I saw my bag on the platform.",
+      "notes": [
+        "第一句必须原样使用。",
+        "写出你看见了什么、做了什么、结果如何。",
+        "主要用一般过去时。"
+      ],
+      "placeholder": "先把题目给的第一句抄在开头，再往下写。",
+      "rubric": [
+        {"id": "opening", "text": "故事以题目给的那一句开头，我没有改掉它。", "hint": "train doors 和 platform 都要保留。"},
+        {"id": "past", "text": "后面的主要动词用了过去时。", "hint": "saw、shouted、went 这一类。"},
+        {"id": "middle", "text": "我写了中间发生的行动，而不只是重复第一句。", "hint": "需要有人帮忙、下车或联系车站之类的行动。"},
+        {"id": "end", "text": "故事有一个清楚的结果。", "hint": "读者知道包最后怎样了。"}
+      ],
+      "model": "The moment the train doors closed, I saw my bag on the platform. I shouted, but the train was already moving. My phone and my house keys were in that bag. At the next station I spoke to a member of staff. She called the station I had just left, and someone had found the bag. An hour later I went back by bus and collected it. Nothing was missing. I was tired and embarrassed, but I was very glad I had asked for help."
+    },
+    {
+      "id": "speaking-photo",
+      "skill": "speaking",
+      "title": "口语：描述一张图",
+      "lessonId": "speaking",
+      "seconds": 60,
+      "instructions": "真实考试的 Part 2 是看一张彩色照片，大约说 1 分钟。这里用一幅原创简图代替官方照片。说完再看示例。本页不录音，也不给发音分。",
+      "image": "images/kitchen-practice.svg",
+      "imageAlt": "练习用原创简图。看得见图时，请直接描述图里的人物、动作和物品。",
+      "textAlternative": "如果图没有显示，就说这个场景：厨房里有两个人。左边的人在切菜，右边的人在搅动一口锅。桌上有番茄和一个碗。窗户开着，锅上方有几缕热气。",
+      "prompt": "看图说大约 1 分钟。按这个顺序：谁在哪里、正在做什么、一个看得见的细节、一句谨慎的推测。",
+      "exampleAnswer": "In this picture I can see two people in a kitchen. The person on the left is cutting vegetables, and the person on the right is stirring a pot. There are tomatoes and a bowl on the table. The window is open, and I can see steam above the pot. They might be cooking lunch together. I cannot tell what the food is, but they look busy and calm.",
+      "rubric": [
+        {"id": "place", "text": "我说了地点和人物。", "hint": "kitchen 和 two people。"},
+        {"id": "action", "text": "我说了正在做的事，用了现在进行时。", "hint": "is cutting、is stirring。"},
+        {"id": "detail", "text": "我加了一个能看见的细节。", "hint": "tomatoes、window 或 steam。"},
+        {"id": "guess", "text": "推测时我用了 might 或 look，没有把猜的说成事实。", "hint": "They might be cooking lunch."},
+        {"id": "time", "text": "我大约说了 45 到 75 秒，没有背一篇无关自我介绍。", "hint": "用页面上的计时器。"}
+      ]
+    },
+    {
+      "id": "speaking-choice",
+      "skill": "speaking",
+      "title": "口语：比较并做选择",
+      "lessonId": "speaking",
+      "seconds": 120,
+      "instructions": "真实考试的 Part 3 要和搭档比较选项并商量结果。独自练习时，请大声说出两个选择的理由，再选定一个，并补一句假如搭档不同意你会怎么说。没有搭档分，也没有发音分。",
+      "prompt": "一位朋友周六下午来你的城市。三个选择：参观博物馆、在公园散步、一起在家做饭。比较其中两个，然后选定一个。",
+      "exampleAnswer": "Why don't we visit the museum? It is interesting if the weather is bad. But it might be expensive. How about cooking at home? It is cheaper, and we can talk while we cook. So shall we choose cooking? If you would rather go to the park, we can do that when it is sunny.",
+      "rubric": [
+        {"id": "two", "text": "我比较了至少两个选择，不是只说一个。", "hint": "用 but 或 on the other hand。"},
+        {"id": "reason", "text": "每个选择我都给了一个原因。", "hint": "天气、价钱或可以聊天。"},
+        {"id": "ask", "text": "我说了一句征求对方意见的话。", "hint": "What do you think?"},
+        {"id": "agree", "text": "我最后用一句话选定了结果。", "hint": "Shall we choose...?"}
+      ]
+    }
+  ]
+}
